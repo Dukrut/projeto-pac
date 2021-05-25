@@ -111,7 +111,7 @@ export default {
 
       message = message.substring(0, message.length - 1)
 
-      if (message.includes("Email") && message.includes("Senha"))
+      if (message.includes("e-mail") && message.includes("senha"))
         message = message.replace(",", "e");
 
       message += (list_fields.length > 1) ? "são obrigatórios. " : "é obrigatório."
