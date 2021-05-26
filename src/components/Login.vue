@@ -29,13 +29,13 @@
                 <b-input-group-prepend is-text>
                   <b-icon icon="person-fill"></b-icon>
                 </b-input-group-prepend>
-                <b-form-input v-model="form.email" @input="clearError('email')" :state="valid.email" type="text" class="form-control-sm" placeholder="E-mail"></b-form-input>
+                <b-form-input v-model="form.email" @input="clearError('email')" :state="valid.email" type="email" class="form-control-sm" placeholder="E-mail"></b-form-input>
               </b-input-group>
               <b-input-group class="mb-2">
                 <b-input-group-prepend is-text>
                   <b-icon icon="lock-fill"></b-icon>
                 </b-input-group-prepend>
-                <b-form-input v-model="form.password" @input="clearError('password')" :state="valid.password" type="text" class="form-control-sm" placeholder="Senha"></b-form-input>
+                <b-form-input v-model="form.password" @input="clearError('password')" :state="valid.password" type="password" class="form-control-sm" placeholder="Senha"></b-form-input>
               </b-input-group>
             </div>
           </b-card-text>
@@ -62,7 +62,9 @@
 </template>
 
 <script>
+// import axios from "axios";
 export default {
+
   data: () => ({
     card_title: "Seja Bem-Vind@!",
     form: {
@@ -119,15 +121,39 @@ export default {
       if(!valid)
         this._toast(message, "error")
 
-      return valid 
+      return valid
     },
     login: function() {
       if (!this.validInputs(this.form))
-        return false 
+        return false
       this.loading = true
+      
+      var _this = this;
+      var user_data = {
+        login: _this.form.email,
+        password: _this.form.password,
+        token: ""
+      }
 
+      this.$axios({
+        method: "POST",
+        url: "http://localhost:8000/login",
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': '*',
+          'Access-Control-Allow-Origin': "*"
+        },
+        data: user_data,
+      }).then((response) => {
+        console.log(response);
+      }).catch((error) => {
+        console.log(error);
+      }).finally(() =>{
+        setTimeout(() => {
+          this.loading = false;
+        }, 500)
+      });
 
-      // axios...
     }
   }
 }
