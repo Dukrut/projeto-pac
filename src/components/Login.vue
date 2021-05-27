@@ -127,32 +127,35 @@ export default {
       if (!this.validInputs(this.form))
         return false
       this.loading = true
-      
-      var _this = this;
-      var user_data = {
-        login: _this.form.email,
-        password: _this.form.password,
+
+      var json = {
+        login: this.form.email,
+        password: this.form.password,
         token: ""
       }
+      console.log(json);
+       window.location.href = "/system"
+      // this.$axios({
+      //   method: "POST",
+      //   url: "http://localhost:8000/login",
+      //   data: json
+      // }).then((response) => {
+      //   console.log(response);
+      //   var data = response.data
+      //   // TRATAR SE AUTENTICOU OU NÃO.
 
-      this.$axios({
-        method: "POST",
-        url: "http://localhost:8000/login",
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': '*',
-          'Access-Control-Allow-Origin': "*"
-        },
-        data: user_data,
-      }).then((response) => {
-        console.log(response);
-      }).catch((error) => {
-        console.log(error);
-      }).finally(() =>{
-        setTimeout(() => {
-          this.loading = false;
-        }, 500)
-      });
+        
+      //   // if (data)
+      //   //  window.location.href = "/system"
+      // }).catch((error) => {
+      //   console.log("Erro " , error);
+
+      // }).finally(() =>{
+      //   setTimeout(() => {
+      //     this.loading = false;
+      //   }, 500)
+
+      // });
 
     }
   }

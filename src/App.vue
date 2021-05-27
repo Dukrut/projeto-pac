@@ -1,20 +1,15 @@
 <template>
-  <v-app>
-    <v-main>
-      <Login/>
-    </v-main>
-  </v-app>
+    <div>
+      <router-link to="/login">Login</router-link>
+      <router-link to="/system">Sistema</router-link>
+      <router-view></router-view>
+    </div>
 </template>
 
 <script>
-import Login from './components/Login';
 
 export default {
   name: 'App',
-
-  components: {
-    Login,
-  },
 
   data: () => ({
     //
