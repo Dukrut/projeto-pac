@@ -1,16 +1,38 @@
 <template>
   <div class="body">
-    <navbar></navbar>
+<div>
+  <b-navbar type="dark" variant="dark">
+    <b-navbar-nav>
+      <b-nav-item href="/system">Home</b-nav-item>
+      <b-nav-item-dropdown text="Configurações" right>
+          
+        <b-dropdown-item href="#">Usuários</b-dropdown-item>
+        <b-dropdown-item href="#">Grupos</b-dropdown-item>
+        <b-dropdown-item href="#">Perguntas</b-dropdown-item>
+        <b-dropdown-item href="#">Respostas</b-dropdown-item>
+      </b-nav-item-dropdown>
+      <!-- Navbar dropdowns -->
+      <b-nav-item-dropdown text="Lang" right>
+        <b-dropdown-item href="#">EN</b-dropdown-item>
+        <b-dropdown-item href="#">ES</b-dropdown-item>
+        <b-dropdown-item href="#">RU</b-dropdown-item>
+        <b-dropdown-item href="#">FA</b-dropdown-item>
+      </b-nav-item-dropdown>
+
+      <b-nav-item-dropdown text="User" right>
+        <b-dropdown-item href="#">Account</b-dropdown-item>
+        <b-dropdown-item href="#">Settings</b-dropdown-item>
+      </b-nav-item-dropdown>
+    </b-navbar-nav>
+  </b-navbar>
+</div>
   </div>
 </template>
 
 <script>
-import Navbar from "./base/Navbar"
-
+// import axios from "axios";
 export default {
-  components:{
-    Navbar
-  },
+
   data: () => ({
     card_title: "Seja Bem-Vind@!",
     form: {
