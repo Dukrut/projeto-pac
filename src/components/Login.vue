@@ -21,7 +21,7 @@
             <b-icon  icon="person-circle" font-scale="4"></b-icon>
             <i class="fas fa-ad"></i>
           </div>
-          
+
           <!-- Campos de login e senha -->
           <b-card-text>
             <div>
@@ -73,7 +73,7 @@ export default {
     },
     valid: {
       email: null,
-      password: null,  
+      password: null,
     },
     loading: false,
   }),
@@ -83,7 +83,7 @@ export default {
         message: _message,
         type: _type,
         position: "top-right",
-      }) 
+      })
     },
     regexTypes: function() {
       return [null, undefined, ""]
@@ -92,10 +92,10 @@ export default {
       this.valid[prop] = null
     },
     validInputs: function(form) {
-      var valid = true 
-      var list_fields = [] 
+      var valid = true
+      var list_fields = []
       for (const key in form) {
-        const element = form[key] 
+        const element = form[key]
         if (this.regexTypes().includes(element)){
           list_fields.push(key)
           this.valid[key] = false
@@ -144,7 +144,7 @@ export default {
       //   var data = response.data
       //   // TRATAR SE AUTENTICOU OU NÃO.
 
-        
+
       //   // if (data)
       //   //  window.location.href = "/system"
       // }).catch((error) => {
@@ -164,16 +164,16 @@ export default {
 
 <style>
   .card-login{
-    height: 100vh; 
-    align-items: center 
+    height: 100vh;
+    align-items: center
   }
   .card-img{
     height: 100vh;
-    align-items: center 
+    align-items: center
   }
   .avatar{
     border: solid black 1px;
-    background-color: #F0F8FF 
+    background-color: #F0F8FF
   }
   .btn-login{
     background-color: #1A526B !important;

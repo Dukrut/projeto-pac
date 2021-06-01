@@ -2,6 +2,8 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Login from '../components/Login.vue'
 import System from '../components/System.vue'
+import UsersList from '../components/UsersList.vue'
+import GroupList from '../components/GroupList.vue'
 
 Vue.use(VueRouter)
 
@@ -20,7 +22,18 @@ const routes = [
         path: '/system',
         name: 'Sistema',
         component: System
+    },
+    {
+        path: '/users',
+        name: 'Usuários',
+        component: UsersList
+    },
+    {
+        path: '/groups',
+        name: 'Grupos',
+        component: GroupList
     }
+    
 ]
 
 const router = new VueRouter({
