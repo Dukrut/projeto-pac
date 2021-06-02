@@ -62,7 +62,6 @@
 </template>
 
 <script>
-// import axios from "axios";
 export default {
 
   data: () => ({
@@ -76,6 +75,7 @@ export default {
       password: null,
     },
     loading: false,
+    authenticated: false,
   }),
   methods: {
     _toast: function(_message, _type){
@@ -133,29 +133,22 @@ export default {
         password: this.form.password,
         token: ""
       }
-      console.log(json);
-       window.location.href = "/system"
-      // this.$axios({
-      //   method: "POST",
-      //   url: "http://localhost:8000/login",
-      //   data: json
-      // }).then((response) => {
-      //   console.log(response);
-      //   var data = response.data
-      //   // TRATAR SE AUTENTICOU OU NÃO.
+      this.$axios({
+        method: "POST",
+        url: "http://localhost:8000/login",
+        data: json
+      }).then((response) => {
+        if (response.ok) this.authenticated = true
+      }).catch((error) => {
+        console.error(error);
+        this._toast("Credenciais inválidas, por favor verifique!", "error")
+      }).finally(() =>{
+        setTimeout(() => {
+          this.loading = false;
+          if (this.authenticated) window.location.href = "/system"
+        }, 500)
 
-
-      //   // if (data)
-      //   //  window.location.href = "/system"
-      // }).catch((error) => {
-      //   console.log("Erro " , error);
-
-      // }).finally(() =>{
-      //   setTimeout(() => {
-      //     this.loading = false;
-      //   }, 500)
-
-      // });
+      });
 
     }
   }
