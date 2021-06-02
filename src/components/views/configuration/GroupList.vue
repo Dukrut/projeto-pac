@@ -1,7 +1,8 @@
 <template>
-  <div class="body">
-    <div class="p-4">
-      <b-button-group class="mb-3">
+  <div class="body p-4">
+      <h3><b-icon icon="people"></b-icon> Grupos</h3>
+
+      <b-button-group class="mb-3 mt-2">
         <b-button size="sm" class="buttons" ><b-icon icon="person-plus"></b-icon> Novo Usuário</b-button>
       </b-button-group>
       <b-table striped
@@ -18,11 +19,9 @@
                   <b-button-group class="mx-1">
                     <b-button size="sm" variant="danger"><b-icon icon="dash"></b-icon></b-button>
                   </b-button-group>
+
               </template>
       </b-table>
-    </div>
-
-
   </div>
 </template>
 
@@ -33,23 +32,13 @@ export default {
   components:{
   },
   data: () => ({
-    fields: ["nome_completo", "email", "data_de_nascimento", "telefone", "administrador", "endereço", "grupo", "ações"],
+    fields: ["nome", "descrição", "ações"],
     items: [
-      { nome_completo: 'Eduardo',
-        email: "eduardo@eduardo.com.br",
-        data_de_nascimento:"01/01/1950",
-        telefone: '(47) 99999-9999',
-        administrador: "Sim",
-        endereço: "Jaraguá do Sul",
-        grupo: "Dev",
+      { nome: 'Dev',
+        descrição: "Desenvolvedores do Sistema",
       },
-      { nome_completo: 'Camille',
-        email: "camille@camille.com.br",
-        data_de_nascimento:"01/01/1950",
-        telefone: '(47) 99999-9999',
-        administrador: "Sim",
-        endereço: "Jaraguá do Sul",
-        grupo: "Dev",
+      { nome: 'Usuários',
+        descrição: "Usuários comuns.",
       },
 
     ]

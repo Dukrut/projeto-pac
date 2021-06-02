@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import Navbar from "./base/Navbar"
+import Navbar from "./Navbar"
 
 export default {
   components:{
@@ -19,7 +19,7 @@ export default {
     },
     valid: {
       email: null,
-      password: null,  
+      password: null,
     },
     loading: false,
   }),
@@ -29,7 +29,7 @@ export default {
         message: _message,
         type: _type,
         position: "top-right",
-      }) 
+      })
     },
     regexTypes: function() {
       return [null, undefined, ""]
@@ -38,10 +38,10 @@ export default {
       this.valid[prop] = null
     },
     validInputs: function(form) {
-      var valid = true 
-      var list_fields = [] 
+      var valid = true
+      var list_fields = []
       for (const key in form) {
-        const element = form[key] 
+        const element = form[key]
         if (this.regexTypes().includes(element)){
           list_fields.push(key)
           this.valid[key] = false
@@ -73,7 +73,7 @@ export default {
       if (!this.validInputs(this.form))
         return false
       this.loading = true
-      
+
       var _this = this;
       var user_data = {
         login: _this.form.email,
@@ -107,16 +107,16 @@ export default {
 
 <style>
   .card-login{
-    height: 100vh; 
-    align-items: center 
+    height: 100vh;
+    align-items: center
   }
   .card-img{
     height: 100vh;
-    align-items: center 
+    align-items: center
   }
   .avatar{
     border: solid black 1px;
-    background-color: #F0F8FF 
+    background-color: #F0F8FF
   }
   .btn-login{
     background-color: #1A526B !important;

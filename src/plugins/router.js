@@ -1,9 +1,10 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Login from '../components/Login.vue'
-import System from '../components/System.vue'
-import UsersList from '../components/UsersList.vue'
-import GroupList from '../components/GroupList.vue'
+import System from '../components/base/System.vue'
+import UsersList from '../components/views/configuration/UsersList.vue'
+import GroupList from '../components/views/configuration/GroupList.vue'
+import Challenges from '../components/views/Challenges.vue'
 
 Vue.use(VueRouter)
 
@@ -32,8 +33,13 @@ const routes = [
         path: '/groups',
         name: 'Grupos',
         component: GroupList
+    },
+    {
+        path: '/dashboard',
+        name: 'Desafios',
+        component: Challenges
     }
-    
+
 ]
 
 const router = new VueRouter({
