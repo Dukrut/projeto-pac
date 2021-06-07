@@ -3,25 +3,42 @@
       <h3><b-icon icon="people"></b-icon> Grupos</h3>
 
       <b-button-group class="mb-3 mt-2">
-        <b-button size="sm" class="buttons" ><b-icon icon="person-plus"></b-icon> Novo Usuário</b-button>
+        <b-button size="sm" class="buttons" ><b-icon icon="plus"></b-icon> Novo grupo</b-button>
       </b-button-group>
-      <b-table striped
-               hover
-               bordered
-               table-variant="light"
-               class="text-center"
-               :items="items"
-               :fields="fields">
-               <template #cell(ações)>
-                  <b-button-group class="mx-1">
-                    <b-button size="sm" variant="primary"><b-icon icon="pencil-square"></b-icon></b-button>
-                  </b-button-group>
-                  <b-button-group class="mx-1">
-                    <b-button size="sm" variant="danger"><b-icon icon="dash"></b-icon></b-button>
-                  </b-button-group>
 
-              </template>
-      </b-table>
+
+      <table class="w-100 border">
+        <thead class="text-center border">
+          <th class="p-2" v-for="field, index in fields" :key="index">{{field.name}}</th>
+        </thead>
+        <tbody class="border">
+          <tr class="border" v-for="item,index in items" :key="index">
+            <td class="p-2 border text-justify">{{item.name}}</td>
+            <td class="p-2 border text-justify"> {{item.description}} </td>
+            <td class="p-2 border text-center">
+              <button type="button" name="button" @click="editGroup(item.id)">Editar</button>
+              <button type="button" name="button" @click="removeGroup(item.id)">Remover</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <b-modal
+        id="add-edit-group"
+        ref="modal"
+        title="Grupo"
+        >
+         <b-form-group
+           label="Name"
+           label-for="name-input"
+           invalid-feedback="Name is required"
+         >
+         <b-form-input
+           id="name-input"
+           required
+         ></b-form-input>
+       </b-form-group>
+   </b-modal>
   </div>
 </template>
 
@@ -32,18 +49,32 @@ export default {
   components:{
   },
   data: () => ({
-    fields: ["nome", "descrição", "ações"],
+    fields: [
+      { name: "Nome" },
+      { name: "Descrição" },
+      { name: "Ações" }
+    ],
     items: [
-      { nome: 'Dev',
-        descrição: "Desenvolvedores do Sistema",
+      {
+        name: 'Dev',
+        description: "Desenvolvedores do Sistema",
+        id: 1
       },
-      { nome: 'Usuários',
-        descrição: "Usuários comuns.",
+      {
+        name: 'Usuários',
+        description: "Usuários comuns.",
+        id: 2
       },
 
     ]
   }),
   methods: {
+    editGroup:function (id){
+      console.log(id);
+    },
+    removeGroup:function (id){
+      console.log(id);
+    }
   }
 }
 </script>

@@ -3,7 +3,7 @@
       <h3><b-icon icon="person"></b-icon> Usuários</h3>
 
       <b-button-group class="mb-3 mt-2">
-        <b-button size="sm" class="buttons" ><b-icon icon="person-plus"></b-icon> Novo Usuário</b-button>
+        <b-button size="sm" class="buttons" ><b-icon icon="plus"></b-icon> Novo Usuário</b-button>
       </b-button-group>
       <b-table striped
                hover

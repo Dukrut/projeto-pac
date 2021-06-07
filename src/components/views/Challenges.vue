@@ -6,13 +6,13 @@
     <hr>
 
     <div class="col-12 d-flex justify-content-center align-middle h-50">
-      <img src="../../../public/images/questions.png"  alt="">
+      <img src="../../../public/images/questions.png" class="rounded-3"  alt="">
     </div>
 
     <b-form-group label="Selecione o nível de dificuldade">
-      <b-form-radio v-model="selected" value="A">Fácil</b-form-radio>
-      <b-form-radio v-model="selected" value="B">Médio</b-form-radio>
-      <b-form-radio v-model="selected" value="C">Difícil</b-form-radio>
+      <b-form-radio value="A">Fácil</b-form-radio>
+      <b-form-radio value="B">Médio</b-form-radio>
+      <b-form-radio value="C">Difícil</b-form-radio>
    </b-form-group>
 
    <div class="w-100 text-center">
@@ -29,6 +29,7 @@ export default {
   components:{
   },
   data: () => ({
+
   }),
   methods: {
   }

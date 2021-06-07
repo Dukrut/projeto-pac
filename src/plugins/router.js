@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Login from '../components/Login.vue'
+import Login from '../components/views/Login.vue'
 import System from '../components/base/System.vue'
 import UsersList from '../components/views/configuration/UsersList.vue'
 import GroupList from '../components/views/configuration/GroupList.vue'

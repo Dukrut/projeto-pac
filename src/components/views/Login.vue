@@ -134,28 +134,28 @@ export default {
         token: ""
       }
       console.log(json);
-       window.location.href = "/users"
-      // this.$axios({
-      //   method: "POST",
-      //   url: "http://localhost:8000/login",
-      //   data: json
-      // }).then((response) => {
-      //   console.log(response);
-      //   var data = response.data
-      //   // TRATAR SE AUTENTICOU OU NÃO.
+       window.location.href = "/system"
+      this.$axios({
+        method: "POST",
+        url: "http://localhost:8000/login",
+        data: json
+      }).then((response) => {
+        console.log(response);
+        // var data = response.data
+        // TRATAR SE AUTENTICOU OU NÃO.
 
 
-      //   // if (data)
-      //   //  window.location.href = "/system"
-      // }).catch((error) => {
-      //   console.log("Erro " , error);
+        // if (data)
+        //  window.location.href = "/system"
+      }).catch((error) => {
+        console.log("Erro " , error);
 
-      // }).finally(() =>{
-      //   setTimeout(() => {
-      //     this.loading = false;
-      //   }, 500)
+      }).finally(() =>{
+        setTimeout(() => {
+          this.loading = false;
+        }, 500)
 
-      // });
+      });
 
     }
   }
