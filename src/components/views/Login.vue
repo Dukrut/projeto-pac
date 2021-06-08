@@ -76,6 +76,7 @@ export default {
       password: null,
     },
     loading: false,
+    authenticated: false,
   }),
   methods: {
     _toast: function(_message, _type){
@@ -133,26 +134,20 @@ export default {
         password: this.form.password,
         token: ""
       }
-      console.log(json);
-       window.location.href = "/system"
       this.$axios({
         method: "POST",
         url: "http://localhost:8000/login",
         data: json
       }).then((response) => {
-        console.log(response);
-        // var data = response.data
-        // TRATAR SE AUTENTICOU OU NÃO.
-
-
-        // if (data)
-        //  window.location.href = "/system"
+        if (response.status == 200) this.authenticated = true
       }).catch((error) => {
-        console.log("Erro " , error);
-
+        console.error(error);
+        this._toast("Credenciais inválidas, por favor verifique!", "error")
       }).finally(() =>{
         setTimeout(() => {
           this.loading = false;
+          console.log(this.authenticated)
+          if (this.authenticated) window.location.href = "/system"
         }, 500)
 
       });
