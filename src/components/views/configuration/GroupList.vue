@@ -3,7 +3,7 @@
     <h3><b-icon icon="people"></b-icon> Grupos</h3>
     <hr>
     <b-button-group class="mb-3 mt-2">
-      <b-button size="sm" class="buttons" ><b-icon icon="plus"></b-icon> Novo grupo</b-button>
+      <b-button size="sm" class="buttons" @click="showModalCreate()"><b-icon icon="plus"></b-icon> Novo grupo</b-button>
     </b-button-group>
     <table class="w-100 border">
       <thead class="text-center border header-table">
@@ -38,6 +38,76 @@
     <b-modal ok-title="Confirmar"
              cancel-title="Cancelar"
              id="modal-edit-group"
+             @cancel="cancelEdit()"
+             title="Editar grupo"
+             button-size="sm"
+             size="lg">
+      <p>Você está editando o grupo <b>{{edit_items.name}}</b></p>
+      <label><b>Nome</b></label>
+      <input type="text" class="form-control form-control-sm" v-model="edit_items.name" value="">
+      <label class="mt-2"><b>Descrição</b></label>
+      <input type="text" class="form-control form-control-sm" v-model="edit_items.description" name="" value="">
+      <label class="mt-2"><b>Permissões dos módulos</b></label>
+      <br>
+      <div class="form-check form-check-inline mt-1">
+        <input class="form-check-input" type="checkbox" id="challenges" v-model="edit_items.permissions.modules.challenges">
+        <label class="form-check-label" for="challenges">Desafios</label>
+      </div>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="checkbox" id="ranking" v-model="edit_items.permissions.modules.ranking">
+        <label class="form-check-label" for="ranking">Ranking</label>
+      </div>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="checkbox" id="reports" v-model="edit_items.permissions.modules.reports">
+        <label class="form-check-label" for="reports">Relatórios</label>
+      </div>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="checkbox" id="configuration" v-model="edit_items.permissions.modules.configuration">
+        <label class="form-check-label" for="configuration">Configurações</label>
+      </div>
+      <br>
+      <label class="mt-2"><b>Permissões de ações</b></label>
+      <br>
+      <label class="mt-1" for=""><i>Desafios</i></label>
+      <br>
+      <div class="form-check form-check-inline mt-1">
+        <input class="form-check-input" type="checkbox" id="conf_chanllenges" v-model="edit_items.permissions.actions.conf_chanllenges">
+        <label class="form-check-label" for="conf_chanllenges">Criar, editar e excluir desafios</label>
+      </div>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="checkbox" id="view_challenges" v-model="edit_items.permissions.actions.view_challenges">
+        <label class="form-check-label" for="view_challenges">Visualizar desafios</label>
+      </div>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="checkbox" id="play_challegens" v-model="edit_items.permissions.actions.play_challegens">
+        <label class="form-check-label" for="play_challegens">Jogar desafios</label>
+      </div>
+      <br>
+      <label class="mt-2" for=""><i>Configurações</i></label>
+      <br>
+      <div class="form-check form-check-inline mt-1 col-5">
+        <input class="form-check-input" type="checkbox" id="conf_users" v-model="edit_items.permissions.actions.conf_users">
+        <label class="form-check-label" for="conf_users">Cadastrar, editar e excluir usuários</label>
+      </div>
+      <div class="form-check form-check-inline col">
+        <input class="form-check-input" type="checkbox" id="view_users" v-model="edit_items.permissions.actions.view_users">
+        <label class="form-check-label" for="view_users">Visualizar usuários</label>
+      </div>
+      <br>
+      <div class="form-check form-check-inline col-5">
+        <input class="form-check-input" type="checkbox" id="conf_groups" v-model="edit_items.permissions.actions.conf_groups">
+        <label class="form-check-label" for="conf_groups">Cadastrar, editar e excluir grupos</label>
+      </div>
+      <div class="form-check form-check-inline col">
+        <input class="form-check-input" type="checkbox" id="view_groups" v-model="edit_items.permissions.actions.view_groups">
+        <label class="form-check-label" for="view_groups">Visualizar grupos</label>
+      </div>
+    </b-modal>
+
+    <!-- Modal de Criação -->
+    <b-modal ok-title="Confirmar"
+             cancel-title="Cancelar"
+             id="modal-new-group"
              @cancel="cancelEdit()"
              title="Editar grupo"
              button-size="sm"
@@ -204,6 +274,9 @@ export default {
       this.remove_items.name = item.name;
       this.remove_items.id = item.id;
       this.$root.$emit('bv::show::modal', 'modal-remove-group')
+    },
+    showModalCreate:function (){
+      this.$root.$emit('bv::show::modal', 'modal-new-group')
     },
     cancelEdit:function(){
       this.edit_items.name = null;
