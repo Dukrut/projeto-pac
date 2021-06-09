@@ -62,7 +62,6 @@
 </template>
 
 <script>
-// import axios from "axios";
 export default {
 
   data: () => ({
@@ -139,15 +138,17 @@ export default {
         url: "http://localhost:8000/login",
         data: json
       }).then((response) => {
-        if (response.status == 200) this.authenticated = true
+        if (response.status == 200)
+          this.authenticated = true
       }).catch((error) => {
         console.error(error);
-        this._toast("Credenciais inválidas, por favor verifique!", "error")
+        this._toast("E-mail ou senha incorreto, verifique e tente novamente.", "error")
       }).finally(() =>{
         setTimeout(() => {
           this.loading = false;
           console.log(this.authenticated)
-          if (this.authenticated) window.location.href = "/system"
+          if (this.authenticated)
+            window.location.href = "/system"
         }, 500)
 
       });
