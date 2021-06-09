@@ -1,60 +1,145 @@
 <template>
   <div class="body p-4">
       <h3><b-icon icon="person"></b-icon> Usuários</h3>
-
+      <hr>
       <b-button-group class="mb-3 mt-2">
-        <b-button size="sm" class="buttons" ><b-icon icon="plus"></b-icon> Novo Usuário</b-button>
+        <b-button size="sm" class="buttons" v-b-modal.modalUsers><b-icon icon="plus"></b-icon> Novo Usuário</b-button>
       </b-button-group>
-      <b-table striped
-               hover
-               bordered
-               table-variant="light"
-               class="text-center"
-               :items="items"
-               :fields="fields">
-               <template #cell(ações)>
-                  <b-button-group class="mx-1">
-                    <b-button size="sm" variant="primary"><b-icon icon="pencil-square"></b-icon></b-button>
-                  </b-button-group>
-                  <b-button-group class="mx-1">
-                    <b-button size="sm" variant="danger"><b-icon icon="dash"></b-icon></b-button>
-                  </b-button-group>
-              </template>
-      </b-table>
+      
+      <table class="w-100 border">
+        <thead class="text-center border header-table">
+          <th class="p-2" v-for="field, index in fields" :key="index">{{field.name}}</th>
+        </thead>
+        <tbody class="border">
+          <tr class="border text-center" :class="{'item-table-striped':index%2 == 0, 'item-table': index%2 != 0}" v-for="item,index in items" :key="index">
+            <td class="p-2 border text-justify">{{item.name}}</td>
+            <td class="p-2 border text-justify"> {{item.email}} </td>
+            <td class="p-2 border text-justify"> {{item.birthday}} </td>
+            <td class="p-2 border text-justify"> {{item.phone}} </td>
+            <td class="p-2 border text-justify"> {{item.school}} </td>
+            <td class="p-2 border text-justify"> {{item.classroom}} </td>
+            <td class="p-2 border text-justify"> {{item.city}} </td>
+            <td class="p-2 border text-justify"> {{item.admin}} </td>
+            <td class="p-2 border text-justify"> {{item.group}} </td>
+            <td class="p-2 border text-center">
+              <button class="btn-primary rounded" @click="showModalEdit(item)"><b-icon icon="pencil"></b-icon></button>
+            </td>
+            <td class="p-2 border text-center">
+              <button class="btn-danger rounded" @click="showModalRemove(item)"><b-icon icon="trash"></b-icon></button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- modal add users -->
+      <div>
+        <b-modal id="modalUsers" size="lg" title="Novo Usuário">
+          <b-row>
+            <b-col>
+              <label for="fullname">Nome Completo</label>
+              <b-form-input id="fullname" type="text" size="sm" placeholder="nome completo"></b-form-input>
+            </b-col>
+            <b-col>
+              <label for="email">Email</label>
+              <b-form-input id="email" type="email" size="sm" placeholder="example@example.com"></b-form-input>
+            </b-col>
+          </b-row>
+
+          <b-row class="mt-2">
+            <b-col>
+              <label for="birthday">Data de Nascimento</label>
+              <b-form-input id="birthday" type="date" size="sm" placeholder="00/00/0000"></b-form-input>
+            </b-col>
+            <b-col>
+              <label for="phone">Telefone</label>
+              <b-form-input id="phone" type="tel" size="sm" placeholder="Ex: (99) 99999-9999"></b-form-input>
+            </b-col>
+          </b-row>
+
+          <b-row class="mt-2">
+            <b-col>
+              <label for="school">Escola</label>
+              <b-form-input id="school" type="text" size="sm" placeholder="nome da escola"></b-form-input>
+            </b-col>
+            <b-col>
+              <label for="classroom">Turma</label>
+              <b-form-input id="classroom" type="text" size="sm" placeholder="Ex: 6º 02"></b-form-input>
+            </b-col>
+            <b-col>
+              <label for="city">Cidade</label>
+              <b-form-input id="city" type="text" size="sm" placeholder="Ex: São Paulo"></b-form-input>
+            </b-col>
+          </b-row>
+
+          <b-row class="mt-2">
+            <b-col>
+              <label for="admin">O usuário é administrador?</label>
+              <b-form-select v-model="selected" :options="options"></b-form-select>
+            </b-col>
+            <b-col>
+              <label for="group">Grupo</label>
+              <b-form-input id="group" type="text" size="sm" placeholder="Ex: Professores"></b-form-input>
+            </b-col>
+          </b-row>
+        </b-modal>
+      </div>
   </div>
 </template>
 
 <script>
-// import Navbar from "./base/Navbar"
-
-export default {
-  components:{
-  },
-  data: () => ({
-    fields: ["nome_completo", "email", "data_de_nascimento", "telefone", "administrador", "endereço", "grupo", "ações"],
-    items: [
-      { nome_completo: 'Eduardo',
-        email: "eduardo@eduardo.com.br",
-        data_de_nascimento:"01/01/1950",
-        telefone: '(47) 99999-9999',
-        administrador: "Sim",
-        endereço: "Jaraguá do Sul",
-        grupo: "Dev",
-      },
-      { nome_completo: 'Camille',
-        email: "camille@camille.com.br",
-        data_de_nascimento:"01/01/1950",
-        telefone: '(47) 99999-9999',
-        administrador: "Sim",
-        endereço: "Jaraguá do Sul",
-        grupo: "Dev",
-      },
-
-    ]
-  }),
-  methods: {
+  export default {
+    components:{ 
+    },
+    data: () => ({
+      fields: [
+        {name: "Nome Completo"     },
+        {name: "Email"             },
+        {name: "Data de Nascimento"},
+        {name: "Telefone"          },
+        {name: "Escola"            },
+        {name: "Turma"             },
+        {name: "Cidade"            },
+        {name: "Administrador"     },
+        {name: "Grupo"             },
+        {name: "Editar"            },
+        {name: "Excluir"           }
+      ],
+      items: [
+        {
+          name: "José",
+          email: "jose@jose.com",
+          birthday:"20/02/2009",
+          phone:"(99) 99999-9999",
+          school:"Escola Blá blá",
+          classroom:"6º 02",
+          city:"Jaraguá do Sul",
+          admin:"Não",
+          group:"Alunos",
+          id: 1
+        },
+        {
+          name: "Rita",
+          email: "rita@rita.com",
+          birthday:"11/08/1980",
+          phone:"(99) 99999-9999",
+          school:"Escola Blá blá",
+          classroom:"-",
+          city:"Jaraguá do Sul",
+          admin:"Sim",
+          group:"Professores",
+          id: 2
+        }
+      ],
+      selected: null,
+      options: [
+        {value: null, text: '-- Selecione --', disabled: true },
+        {text: 'Sim' },
+        {text: 'Não' }
+      ]
+    }),
+    methods: {
+    }
   }
-}
 </script>
 
 <style>
