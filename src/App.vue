@@ -21,8 +21,7 @@ export default {
 
 <style media="screen">
   .body{
-    height: 100vh;
+    height: 100%;
     background: #F0F8FF;
-    overflow: hidden;
   }
 </style>

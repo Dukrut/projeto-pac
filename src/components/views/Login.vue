@@ -1,5 +1,5 @@
 <template>
-  <div class="body">
+  <div class="body overflow-hidden">
 
     <div class="row">
       <div class="col-4 d-flex justify-content-center align-middle card-login">

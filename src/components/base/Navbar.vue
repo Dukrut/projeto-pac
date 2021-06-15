@@ -17,7 +17,6 @@
     </b-navbar>
 
     <div>
-
       <users-list v-if="view == 'Usuários'"></users-list>
       <group-list v-else-if="view == 'Grupos'"></group-list>
       <challenges v-else-if="view == 'Desafios'"></challenges>
@@ -42,7 +41,6 @@ export default {
   }),
   methods: {
     changeView: function(view){
-      console.log(view);
       this.view = view;
     }
   }
