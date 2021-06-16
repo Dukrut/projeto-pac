@@ -5,7 +5,7 @@
       <b-button-group class="mb-3 mt-2">
         <b-button size="sm" class="buttons" v-b-modal.modalUsers><b-icon icon="plus"></b-icon> Novo Usuário</b-button>
       </b-button-group>
-      
+
       <table class="w-100 border">
         <thead class="text-center border header-table">
           <th class="p-2" v-for="field, index in fields" :key="index">{{field.name}}</th>
@@ -88,7 +88,7 @@
 
 <script>
   export default {
-    components:{ 
+    components:{
     },
     data: () => ({
       fields: [
@@ -139,12 +139,13 @@
     }),
 
     mounted() {
-      let users = this.getUsers()
-      if (users) {
-        this.items.push(users)
-      }
-      console.log(this.items)
-      
+      this.getUsers()
+      // let users = this.getUsers()
+      // if (users) {
+      //   this.items.push(users)
+      // }
+      // console.log(this.items)
+
     },
 
     methods: {
@@ -155,6 +156,10 @@
           url: "http://localhost:8000/users",
         }).then((response) => {
           console.log(response.data)
+          let users = response.data;
+          let x = users[0].birth.split("-")
+          users[0].birth = x[2].substr(0, 2) + "/" + x[1] + "/" + x[0]
+          this.items.push(users[0])
         }).catch((error) => {
           console.error(error);
           this._toast("Erro ao requisitar informações do servidor", "error")
