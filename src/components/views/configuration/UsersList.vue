@@ -104,32 +104,7 @@
         {name: "Editar"            },
         {name: "Excluir"           }
       ],
-      items: [
-        {
-          name: "José",
-          email: "jose@jose.com",
-          birth:"20/02/2009",
-          phone:"(99) 99999-9999",
-          school:"Escola Blá blá",
-          classroom:"6º 02",
-          city:"Jaraguá do Sul",
-          admin:"Não",
-          group:"Alunos",
-          id: 1
-        },
-        {
-          name: "Rita",
-          email: "rita@rita.com",
-          birth:"11/08/1980",
-          phone:"(99) 99999-9999",
-          school:"Escola Blá blá",
-          classroom:"-",
-          city:"Jaraguá do Sul",
-          admin:"Sim",
-          group:"Professores",
-          id: 2
-        }
-      ],
+      items: [],
       selected: null,
       options: [
         {value: null, text: '-- Selecione --', disabled: true },
@@ -138,15 +113,7 @@
       ]
     }),
 
-    mounted() {
-      this.getUsers()
-      // let users = this.getUsers()
-      // if (users) {
-      //   this.items.push(users)
-      // }
-      // console.log(this.items)
-
-    },
+    mounted() { this.getUsers() },
 
     methods: {
 
@@ -155,15 +122,20 @@
           method: "GET",
           url: "http://localhost:8000/users",
         }).then((response) => {
-          console.log(response.data)
           let users = response.data;
-          let x = users[0].birth.split("-")
-          users[0].birth = x[2].substr(0, 2) + "/" + x[1] + "/" + x[0]
-          this.items.push(users[0])
+          for (let index in users) {
+            users[index].birth = this.formatDate(users[index].birth)
+            this.items.push(users[index])
+          }
         }).catch((error) => {
           console.error(error);
           this._toast("Erro ao requisitar informações do servidor", "error")
         })
+      },
+
+      formatDate: function(date) {
+        let newDate = new Date(date)      
+        return newDate.getDate() + '/' + (newDate.getMonth() + 1) + '/' + newDate.getFullYear();
       }
 
     }
