@@ -14,7 +14,7 @@
           <tr class="border text-center" :class="{'item-table-striped':index%2 == 0, 'item-table': index%2 != 0}" v-for="item,index in items" :key="index">
             <td class="p-2 border text-justify">{{item.name}}</td>
             <td class="p-2 border text-justify"> {{item.email}} </td>
-            <td class="p-2 border text-justify"> {{item.birthday}} </td>
+            <td class="p-2 border text-justify"> {{item.birth}} </td>
             <td class="p-2 border text-justify"> {{item.phone}} </td>
             <td class="p-2 border text-justify"> {{item.school}} </td>
             <td class="p-2 border text-justify"> {{item.classroom}} </td>
@@ -47,8 +47,8 @@
 
           <b-row class="mt-2">
             <b-col>
-              <label for="birthday">Data de Nascimento</label>
-              <b-form-input id="birthday" type="date" size="sm" placeholder="00/00/0000"></b-form-input>
+              <label for="birth">Data de Nascimento</label>
+              <b-form-input id="birth" type="date" size="sm" placeholder="00/00/0000"></b-form-input>
             </b-col>
             <b-col>
               <label for="phone">Telefone</label>
@@ -108,7 +108,7 @@
         {
           name: "José",
           email: "jose@jose.com",
-          birthday:"20/02/2009",
+          birth:"20/02/2009",
           phone:"(99) 99999-9999",
           school:"Escola Blá blá",
           classroom:"6º 02",
@@ -120,7 +120,7 @@
         {
           name: "Rita",
           email: "rita@rita.com",
-          birthday:"11/08/1980",
+          birth:"11/08/1980",
           phone:"(99) 99999-9999",
           school:"Escola Blá blá",
           classroom:"-",
@@ -137,7 +137,30 @@
         {text: 'Não' }
       ]
     }),
+
+    mounted() {
+      let users = this.getUsers()
+      if (users) {
+        this.items.push(users)
+      }
+      console.log(this.items)
+      
+    },
+
     methods: {
+
+      getUsers: function() {
+        this.$axios({
+          method: "GET",
+          url: "http://localhost:8000/users",
+        }).then((response) => {
+          console.log(response.data)
+        }).catch((error) => {
+          console.error(error);
+          this._toast("Erro ao requisitar informações do servidor", "error")
+        })
+      }
+
     }
   }
 </script>
