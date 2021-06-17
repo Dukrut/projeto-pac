@@ -5,7 +5,7 @@
       <b-button-group class="mb-3 mt-2">
         <b-button size="sm" class="buttons" v-b-modal.modalUsers><b-icon icon="plus"></b-icon> Novo Usuário</b-button>
       </b-button-group>
-      
+
       <table class="w-100 border">
         <thead class="text-center border header-table">
           <th class="p-2" v-for="field, index in fields" :key="index">{{field.name}}</th>
@@ -14,7 +14,7 @@
           <tr class="border text-center" :class="{'item-table-striped':index%2 == 0, 'item-table': index%2 != 0}" v-for="item,index in items" :key="index">
             <td class="p-2 border text-justify">{{item.name}}</td>
             <td class="p-2 border text-justify"> {{item.email}} </td>
-            <td class="p-2 border text-justify"> {{item.birthday}} </td>
+            <td class="p-2 border text-justify"> {{item.birth}} </td>
             <td class="p-2 border text-justify"> {{item.phone}} </td>
             <td class="p-2 border text-justify"> {{item.school}} </td>
             <td class="p-2 border text-justify"> {{item.classroom}} </td>
@@ -47,8 +47,8 @@
 
           <b-row class="mt-2">
             <b-col>
-              <label for="birthday">Data de Nascimento</label>
-              <b-form-input id="birthday" type="date" size="sm" placeholder="00/00/0000"></b-form-input>
+              <label for="birth">Data de Nascimento</label>
+              <b-form-input id="birth" type="date" size="sm" placeholder="00/00/0000"></b-form-input>
             </b-col>
             <b-col>
               <label for="phone">Telefone</label>
@@ -97,8 +97,7 @@
 
 <script>
   export default {
-    components:{ 
-
+    components:{
     },
     data: () => ({
       fields: [
@@ -114,39 +113,40 @@
         {name: "Editar"            },
         {name: "Excluir"           }
       ],
-      items: [
-        {
-          name: "José",
-          email: "jose@jose.com",
-          birthday:"20/02/2009",
-          phone:"(99) 99999-9999",
-          school:"Escola Blá blá",
-          classroom:"6º 02",
-          city:"Jaraguá do Sul",
-          admin:"Não",
-          group:"Alunos",
-          id: 1
-        },
-        {
-          name: "Rita",
-          email: "rita@rita.com",
-          birthday:"11/08/1980",
-          phone:"(99) 99999-9999",
-          school:"Escola Blá blá",
-          classroom:"-",
-          city:"Jaraguá do Sul",
-          admin:"Sim",
-          group:"Professores",
-          id: 2
-        }
-      ],
-      checked: true,
-      new_user: {
-        admin: "no"
-      }
-          
+      items: [],
+      selected: null,
+      options: [
+        {value: null, text: '-- Selecione --', disabled: true },
+        {text: 'Sim' },
+        {text: 'Não' }
+      ]
     }),
+
+    mounted() { this.getUsers() },
+
     methods: {
+
+      getUsers: function() {
+        this.$axios({
+          method: "GET",
+          url: "http://localhost:8000/users",
+        }).then((response) => {
+          let users = response.data;
+          for (let index in users) {
+            users[index].birth = this.formatDate(users[index].birth)
+            this.items.push(users[index])
+          }
+        }).catch((error) => {
+          console.error(error);
+          this._toast("Erro ao requisitar informações do servidor", "error")
+        })
+      },
+
+      formatDate: function(date) {
+        let newDate = new Date(date)      
+        return newDate.getDate() + '/' + (newDate.getMonth() + 1) + '/' + newDate.getFullYear();
+      }
+
     }
   }
 </script>
