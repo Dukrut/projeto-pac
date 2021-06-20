@@ -33,6 +33,7 @@
                 v-model="answer[key]"
                 :options="challenges[key].options"
                 :name="answer[key]"
+                inline
         ></b-form-radio-group>
       </div>
       <hr>

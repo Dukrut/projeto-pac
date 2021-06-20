@@ -124,6 +124,8 @@ export default {
       return valid
     },
     login: function() {
+      window.location.href = "/system"
+      // this.$router.push("/system")
       if (!this.validInputs(this.form))
         return false
       this.loading = true
