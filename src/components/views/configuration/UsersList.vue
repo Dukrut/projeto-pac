@@ -73,12 +73,21 @@
 
           <b-row class="mt-2">
             <b-col>
-              <label for="admin">O usuário é administrador?</label>
-              <b-form-select v-model="selected" :options="options"></b-form-select>
+              <b-form-group label="O usuário é um administrador?" v-model="level">
+                <b-form-radio value="yes" v-model="new_user.admin">Sim</b-form-radio>
+                <b-form-radio value="no" v-model="new_user.admin">Não</b-form-radio>
+              </b-form-group>
             </b-col>
             <b-col>
-              <label for="group">Grupo</label>
-              <b-form-input id="group" type="text" size="sm" placeholder="Ex: Professores"></b-form-input>
+              <b-form inline>
+                <label class="mr-sm-2" for="inline-form-custom-select-pref">Preference</label>
+                <b-form-select
+                  id="inline-form-custom-select-pref"
+                  class="mb-2 mr-sm-2 mb-sm-0"
+                  :options="[{ text: 'Choose...', value: null }, 'One', 'Two', 'Three']"
+                  :value="null"
+                ></b-form-select>
+              </b-form>
             </b-col>
           </b-row>
         </b-modal>
