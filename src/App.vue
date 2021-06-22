@@ -4,6 +4,7 @@
       <router-link to="/system"></router-link>
       <router-link to="/users"></router-link>
       <router-link to="/groups"></router-link>
+      <router-link to="/ranking"></router-link>
       <router-view></router-view>
     </div>
 </template>

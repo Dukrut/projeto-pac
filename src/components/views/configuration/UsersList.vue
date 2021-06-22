@@ -73,10 +73,10 @@
 
           <b-row class="mt-2">
             <b-col>
-              <b-form-group label="O usuário é um administrador?" v-model="level">
+              <!--<b-form-group label="O usuário é um administrador?" v-model="level">
                 <b-form-radio value="yes" v-model="new_user.admin">Sim</b-form-radio>
                 <b-form-radio value="no" v-model="new_user.admin">Não</b-form-radio>
-              </b-form-group>
+              </b-form-group>-->
             </b-col>
             <b-col>
               <b-form inline>
@@ -138,7 +138,7 @@
           }
         }).catch((error) => {
           console.error(error);
-          this._toast("Erro ao requisitar informações do servidor", "error")
+          // this._toast("Erro ao requisitar informações do servidor", "error")
         })
       },
 
