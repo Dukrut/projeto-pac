@@ -7,10 +7,10 @@
         <th class="p-2" v-for="field, index in fields" :key="index">{{field.name}}</th>
       </thead>      
       <tbody class="border">
-        <tr class="border" :class="{'item-table-striped':index%2 == 0, 'item-table': index%2 != 0}" v-for="item,index in items" :key="index">
+        <tr class="border" :class="{'item-table-striped':index%2 == 0, 'item-table': index%2 != 0}" v-for="item, index in items" :key="index">
           <td class="p-2 border text-justify"> {{item.position}} </td>
-          <td class="p-2 border text-justify">{{item.name}}</td>
-          <td class="p-2 border text-justify"> {{item.description}} </td>
+          <td class="p-2 border text-justify">{{item.student}}</td>
+          <td class="p-2 border text-justify"> {{item.points}} </td>
         </tr>
       </tbody>
     </table>
@@ -28,56 +28,7 @@ export default {
       {name: "Nome" },
       {name: "Pontuação"}
     ],
-    items: [
-      {
-        position: "1º Lugar",
-        name: 'Braian Costa Zapelini',
-        description: "100",
-        id: 1
-      },
-      {
-        position: "2º Lugar",
-        name: 'Gusthawo Junkes',
-        description: "90",
-        id: 2
-      },
-      {
-        position: "3º Lugar",
-        name: 'Sílvio Baião Amarante',
-        description: "80",
-        id: 3
-      },
-      {
-        position: "4º Lugar",
-        name: 'Sasha Quintal da Silva',
-        description: "70",
-        id: 4
-      },
-      {
-        position: "5º Lugar",
-        name: 'Brenda Pereira',
-        description: "60",
-        id: 5
-      },
-      {
-        position: "6º Lugar",
-        name: 'Eduardo Krutsch',
-        description: "50",
-        id: 6
-      },
-      {
-        position: "7º Lugar",
-        name: 'Márcia Belmira',
-        description: "40",
-        id: 7
-      },
-      {
-        position: "8º Lugar",
-        name: 'Ana Julia',
-        description: "30",
-        id: 8
-      }
-    ],
+    items: [],
     remove_group:{
       name: null,
       id: null
@@ -134,11 +85,30 @@ export default {
       description: null
     }
   }),
+
+  mounted() { this.getRanking() },
+
   methods: {
 
     regexTypes: function() {
       return [null, undefined, ""]
     },
+
+    getRanking: function() {
+        this.$axios({
+          method: "GET",
+          url: "http://localhost:8000/users/ranking",
+        }).then((response) => {
+          let ranking = response.data
+          console.log(ranking)
+          for (let index in ranking) {
+            this.items.push(ranking[index])
+          }
+        }).catch((error) => {
+          console.error(error)
+           this._toast("Erro ao requisitar informações do servidor", "error")
+        })
+      }
 
   }
 }
