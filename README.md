@@ -9,6 +9,5 @@ Este repositório compõe a parte gráfica e utilizável (front-end) para o repo
 ### Passos para rodar a aplicação
 
 1. Clonar o repositório
-2. Checkout para a branch `v1`
-3. `npm install` para instalar as dependências
-4. `npm run serve` para iniciar a aplicação
+2. `npm install` para instalar as dependências
+3. `npm run serve` para iniciar a aplicação
