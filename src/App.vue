@@ -4,6 +4,7 @@
       <router-link to="/system"></router-link>
       <router-link to="/users"></router-link>
       <router-link to="/groups"></router-link>
+      <router-link to="/ranking"></router-link>
       <router-view></router-view>
     </div>
 </template>
@@ -23,5 +24,6 @@ export default {
   .body{
     height: 100vh;
     background: #F0F8FF;
+    overflow: hidden !important;
   }
 </style>

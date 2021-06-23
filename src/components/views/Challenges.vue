@@ -5,7 +5,7 @@
     <hr>
 
     <div v-if="!started">
-      <h5>Olá <b>{{user_infos.name}}</b>, você já completou 30 de 100 desafios.</h5>
+      <h5>Olá <b>{{user.name}}</b>, você já completou 30 de 100 desafios.</h5>
       <div class="col-12 d-flex justify-content-center align-middle h-25">
         <img src="../../../public/images/questions.png" class="rounded-3" style="height:62.4vh" alt="">
       </div>
@@ -22,7 +22,7 @@
   </div>
 
   <div v-else>
-    <h5>Boa sorte <b>{{user_infos.name}}</b>! Preste muita atenção nas perguntas para responde-las corretamente.</h5>
+    <h5>Boa sorte <b>{{user.name}}</b>! Preste muita atenção nas perguntas para responde-las corretamente.</h5>
     <div class="d-flex flex-column bd-highlight mb-3 overflow-auto">
       <div class="p-1 bd-highlight">
         <span>{{ key+1 }}. <strong>Descrição</strong>: {{ challenges[key].description }}</span>
@@ -68,20 +68,10 @@ export default {
     started: false,
     challenges: [],
     answer: [null, null, null, null, null],
-    user_infos: {},
     time: "",
     color: "green",
     key: 0
   }),
-  created(){
-    // TODO; Verificar outra forma de validar isso...
-    if (this.user != undefined) {
-      this.user_infos = this.user;
-      sessionStorage.setItem("user", JSON.stringify(this.user))
-    }else {
-      this.user_infos = JSON.parse(sessionStorage.getItem("user"))      
-    }
-  },
   mounted() {
     setInterval(() => {
       this.timeChallenge()
