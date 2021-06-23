@@ -15,22 +15,25 @@
         <b-nav-item>Sair</b-nav-item>
       </b-navbar-nav>
     </b-navbar>
-
     <div>
+      {{ user }}
       <users-list v-if="view == 'Usuários'"></users-list>
       <group-list v-else-if="view == 'Grupos'"></group-list>
-      <challenges v-else-if="view == 'Desafios'"></challenges>
+      <challenges :user='user' v-else-if="view == 'Desafios'"></challenges>
     </div>
 
   </div>
 </template>
 
 <script>
-import UsersList from '../views/configuration/UsersList.vue';
-import GroupList from '../views/configuration/GroupList.vue';
-import Challenges from '../views/Challenges.vue';
+import UsersList from '../views/configuration/UsersList.vue'
+import GroupList from '../views/configuration/GroupList.vue'
+import Challenges from '../views/Challenges.vue'
 
 export default {
+  props:{
+    user: {}
+  },
   components:{
     UsersList,
     GroupList,
@@ -41,7 +44,7 @@ export default {
   }),
   methods: {
     changeView: function(view){
-      this.view = view;
+      this.view = view
     }
   }
 }

@@ -1,6 +1,6 @@
 <template>
   <div class="body">
-    <navbar></navbar>
+    <navbar :user="user"></navbar>
   </div>
 </template>
 
@@ -8,6 +8,9 @@
 import Navbar from "./Navbar"
 
 export default {
+  props:{
+    user:{}
+  },
   components:{
     Navbar
   },
