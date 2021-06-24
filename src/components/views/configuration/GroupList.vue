@@ -310,7 +310,24 @@ export default {
       description: null
     }
   }),
+
+  mounted() { this.getGroups() },
+
   methods: {
+
+    getGroups() {
+      this.$axios({
+        method: "GET",
+        url: "http://localhost:8000/groups",
+      }).then((response) => {
+        let groups = response.data
+        console.log(groups)
+      }).catch((error) => {
+        console.error(error)
+        this._toast("Erro ao requisitar informações do servidor", "error")
+      })
+    },
+
     showModalEdit:function (item){
       this.edit_group.name = item.name;
       this.edit_group.id = item.id;

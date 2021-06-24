@@ -95,19 +95,19 @@ export default {
     },
 
     getRanking: function() {
-        this.$axios({
-          method: "GET",
-          url: "http://localhost:8000/users/ranking",
-        }).then((response) => {
-          let ranking = response.data
-          for (let index in ranking) {
-            this.items.push(ranking[index])
-          }
-        }).catch((error) => {
-          console.error(error)
-          this._toast("Erro ao requisitar informações do servidor", "error")
-        })
-      }
+      this.$axios({
+        method: "GET",
+        url: "http://localhost:8000/users/ranking",
+      }).then((response) => {
+        let ranking = response.data
+        for (let index in ranking) {
+          this.items.push(ranking[index])
+        }
+      }).catch((error) => {
+        console.error(error)
+        this._toast("Erro ao requisitar informações do servidor", "error")
+      })
+    }
 
   }
 }
