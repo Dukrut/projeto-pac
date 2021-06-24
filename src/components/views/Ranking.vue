@@ -1,6 +1,6 @@
 <template>
   <div class="body p-4">
-    <h3><b-icon icon="people"></b-icon> Ranking</h3>
+    <h3><b-icon icon="trophy"></b-icon> Ranking</h3>
     <hr>
     <table class="w-100 border">
       <thead class="text-center border header-table">
@@ -95,20 +95,19 @@ export default {
     },
 
     getRanking: function() {
-        this.$axios({
-          method: "GET",
-          url: "http://localhost:8000/users/ranking",
-        }).then((response) => {
-          let ranking = response.data
-          console.log(ranking)
-          for (let index in ranking) {
-            this.items.push(ranking[index])
-          }
-        }).catch((error) => {
-          console.error(error)
-           this._toast("Erro ao requisitar informações do servidor", "error")
-        })
-      }
+      this.$axios({
+        method: "GET",
+        url: "http://localhost:8000/users/ranking",
+      }).then((response) => {
+        let ranking = response.data
+        for (let index in ranking) {
+          this.items.push(ranking[index])
+        }
+      }).catch((error) => {
+        console.error(error)
+        this._toast("Erro ao requisitar informações do servidor", "error")
+      })
+    }
 
   }
 }
