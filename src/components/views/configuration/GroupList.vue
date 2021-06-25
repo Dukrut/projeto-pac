@@ -505,22 +505,24 @@ export default {
     },
 
     saveRemoveGroup: function(){
-      var json = this.remove_group
-
       this.$axios({
-        method: "POST",
-        url: "http://localhost:8000/group/delete",
-        data: json
+        method: "DELETE",
+        url: "http://localhost:8000/groups/delete/" + this.remove_group.id
       }).then((response) => {
-        if (response.status == 200){
-          this._toast("Salvo com sucesso!", "success")
-          this.$root.$emit('bv::hide::modal', 'modal-remove-group')
+        if (response.status == 200) {
+          this._toast("Excluído com sucesso!", "success")
+          this.refresh()
         }
       }).catch((error) => {
-        this._toast("Não foi possível salvar, tente novamente mais tarde.", "error")
+        this._toast("Não foi possível excluir esse grupo, tente novamente mais tarde.", "error")
         console.error(error);
+      }).finally(() => {
+        this.$root.$emit('bv::hide::modal', 'modal-remove-group')
       })
+    },
 
+    refresh: function() {
+      console.log("Refresh")
     }
 
   }
