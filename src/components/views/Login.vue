@@ -52,7 +52,7 @@
       </div>
       <div class="col-8 d-flex justify-content-center align-middle card-login">
         <b-card>
-          <img src="../../../public/images/math.png"  alt="">
+          <img src="../../../public/images/math.svg"  alt="">
         </b-card>
       </div>
 

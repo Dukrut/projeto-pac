@@ -7,7 +7,7 @@
     <div v-if="!started">
       <h5>Olá <b>{{user.name}}</b>, você já completou 30 de 100 desafios.</h5>
       <div class="col-12 d-flex justify-content-center align-middle h-25">
-        <img src="../../../public/images/questions.png" class="rounded-3" style="height:62.4vh" alt="">
+        <img src="../../../public/images/questions.svg" class="rounded-3" style="height:62.4vh" alt="">
       </div>
 
       <b-form-group label="Selecione o nível de dificuldade" v-model="level">
