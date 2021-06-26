@@ -11,16 +11,16 @@
           <th class="p-2" v-for="field, index in fields" :key="index">{{field.name}}</th>
         </thead>
         <tbody class="border">
-          <tr class="border text-center" :class="{'item-table-striped':index%2 == 0, 'item-table': index%2 != 0}" v-for="item,index in items" :key="index">
-            <td class="p-2 border text-justify">{{item.name}}</td>
+          <tr class="border text-center" :class="{'item-table-striped':index % 2 == 0, 'item-table': index%2 != 0}" v-for="item,index in items" :key="index">
+            <td class="p-2 border text-justify"> {{item.name}} </td>
             <td class="p-2 border text-justify"> {{item.email}} </td>
             <td class="p-2 border text-justify"> {{item.birth}} </td>
             <td class="p-2 border text-justify"> {{item.phone}} </td>
-            <td class="p-2 border text-justify"> {{item.school}} </td>
-            <td class="p-2 border text-justify"> {{item.classroom}} </td>
-            <td class="p-2 border text-justify"> {{item.city}} </td>
-            <td class="p-2 border text-justify"> {{item.admin}} </td>
-            <td class="p-2 border text-justify"> {{item.group}} </td>
+            <td class="p-2 border text-justify"> {{item.school.name}} </td>
+            <td class="p-2 border text-justify"> {{item.classroom.name}} </td>
+            <td class="p-2 border text-justify"> {{item.address.city}} </td>
+            <td class="p-2 border text-justify"> {{item.flagMaster == 1 ? 'Sim' : 'Não'}} </td>
+            <td class="p-2 border text-justify"> {{item.group.name}} </td>
             <td class="p-2 border text-center">
               <button class="btn-primary rounded" @click="showModalEdit(item)"><b-icon icon="pencil"></b-icon></button>
             </td>
@@ -133,8 +133,28 @@
         }).then((response) => {
           let users = response.data;
           for (let index in users) {
-            users[index].birth = this.formatDate(users[index].birth)
-            this.items.push(users[index])
+            let user = users[index]
+
+            const address = {
+              city: undefined
+            }
+            const group = {
+              name: undefined
+            }
+            const school = {
+              name: undefined
+            }
+            const classroom = {
+              name: undefined
+            }
+
+            if (!user.address) user.address = address
+            if (!user.group) user.group = group
+            if (!user.school) user.school = school
+            if (!user.classroom) user.classroom = classroom
+            user.birth = this.formatDate(user.birth)
+
+            this.items.push(user)
           }
         }).catch((error) => {
           console.error(error);

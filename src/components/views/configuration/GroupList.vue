@@ -209,7 +209,7 @@ export default {
       {name: "Excluir"}
     ],
     items: [],
-    remove_group:{
+    remove_group: {
       name: null,
       id: null
     },
@@ -338,11 +338,11 @@ export default {
       this.$root.$emit('bv::show::modal', 'modal-remove-group')
     },
 
-    showModalCreate:function (){
+    showModalCreate: function (){
       this.$root.$emit('bv::show::modal', 'modal-new-group')
     },
 
-    cancelEdit:function(){
+    cancelEdit: function() {
       this.edit_group = {
         name: null,
         id: null,
@@ -487,7 +487,7 @@ export default {
       if (!this.validInputs(this.edit_group, this.error_edit_group))
         return false
 
-      var json = this.edit_group;
+      let json = this.edit_group;
 
       this.$axios({
         method: "POST",
