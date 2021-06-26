@@ -271,14 +271,15 @@ export default {
   methods: {
 
     getGroups: function() {
-      this.$axios({
+      const service = this
+      service.$axios({
         method: "GET",
         url: "http://localhost:8000/groups",
       }).then((response) => {
-        this.prepare(response.data)
+        service.prepare(response.data)
       }).catch((error) => {
         console.error(error)
-        this._toast("Erro ao requisitar informações do servidor", "error")
+        service._toast("Erro ao requisitar informações do servidor", "error")
       })
     },
 

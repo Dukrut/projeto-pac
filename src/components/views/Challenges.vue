@@ -11,21 +11,21 @@
       </div>
 
       <b-form-group label="Selecione o nível de dificuldade" v-model="level">
-        <b-form-radio value="easy" v-model="level">Fácil</b-form-radio>
-        <b-form-radio value="medium" v-model="level">Médio</b-form-radio>
-        <b-form-radio value="hard" v-model="level">Difícil</b-form-radio>
+        <b-form-radio value="1" v-model="level">&nbsp;Fácil</b-form-radio>
+        <b-form-radio value="2" v-model="level">&nbsp;Médio</b-form-radio>
+        <b-form-radio value="3" v-model="level">&nbsp;Difícil</b-form-radio>
      </b-form-group>
 
      <div class="w-100 text-center">
-       <b-button class="buttons w-25 mt-4" @click="startChallegens()">Iniciar Desafios</b-button>
+       <b-button class="buttons w-25 mt-4" @click="startChallenges()">Iniciar Desafios</b-button>
      </div>
   </div>
 
   <div v-else>
-    <h5>Boa sorte <b>{{user.name}}</b>! Preste muita atenção nas perguntas para responde-las corretamente.</h5>
+    <h5 v-if="key == 0">Boa sorte <b>{{user.name}}</b>! Preste muita atenção nas perguntas para responde-las corretamente.</h5>
     <div class="d-flex flex-column bd-highlight mb-3 overflow-auto">
       <div class="p-1 bd-highlight">
-        <span>{{ key+1 }}. <strong>Descrição</strong>: {{ challenges[key].description }}</span>
+        <span>{{ key + 1 }}. <strong>Descrição</strong>: {{ challenges[key].description }}</span>
       </div>
       <div class="p-1 bd-highlight">
         <span><strong>Selecione a alternativa correta</strong>:</span>
@@ -63,8 +63,9 @@ export default {
   props:{
     user: {}
   },
+
   data: () => ({
-    level: "easy",
+    level: 1,
     started: false,
     challenges: [],
     answer: [null, null, null, null, null],
@@ -72,37 +73,49 @@ export default {
     color: "green",
     key: 0
   }),
+
   mounted() {
     setInterval(() => {
       this.timeChallenge()
     }, 1000);
   },
+
   methods: {
-    getChallenges: function(){
-      this.time = "10:00"
-      this.challenges = [
-        { description : "Em um sítio há 12 árvores. Cada árvore possui 12 galhos e em cada galho tem 12 maçãs. Quantas maçãs existem no sítio?",
-          options: ["144", "1224", "1564", "1728", "1368"],
-          correct: "144"
-        },
-        { description : "Leandro tem 40 balas chupou 12 e deu 10 para sua irmã. Com quantas balas ele ficou?",
-          options: ["15", "18", "14", "16", "13"],
-          correct: "15"
-        },
-        { description : "Quantos números 1 eu tenho de 1 até 191?",
-          options: ["140", "136", "132", "150", "126"],
-          correct: "140"
-        },
-        { description : "Pedro tem 30 anos e tem mais três irmãos: Bianca de 27, Victor de 23 e Alex de 18. Qual a diferença de idade entre Pedro e irmão caçula?",
-          options: ["13", "11", "12", "14", "16"],
-          correct: "13"
-        },
-        { description : "Quantos zeros tem o número UM BILHÃO?",
-          options: ["6", "7", "8", "9", "10"],
-          correct: "9"
+
+    getChallenges: function() {
+      const service = this
+      service.time = "10:00"
+      service.$axios({
+        method: "GET",
+        url: "http://localhost:8000/questions/level/" + parseInt(service.level),
+      }).then((response) => {
+        let questions = response.data 
+        if (!questions.length) {
+          service._toast("Não há questões desse nível cadastradas no banco de questões, acione o seu professor!", "error")  
         }
-      ]
+        for (let index in questions) {
+          let question = questions[index]
+          let challenge = {
+            title: null,
+            description: null,
+            correct: null,
+            options: []
+          }
+          challenge.title = question.title
+          challenge.description = question.description
+          challenge.correct = question.correctResponse
+          for (let index in question.alternatives) {
+            let alternative = question.alternatives[index]
+            challenge.options.push(alternative.description)
+          }
+          service.challenges.push(challenge)
+        }
+      }).catch((error) => {
+        console.error(error)
+        service._toast("Erro ao requisitar informações do servidor", "error")
+      })
     },
+
     _toast: function(_message, _type){
       this.$toast.open({
         message: _message,
@@ -110,13 +123,16 @@ export default {
         position: "top-right",
       })
     },
+
     regexTypes: function() {
       return [null, undefined, ""]
     },
-    startChallegens: function(){
+
+    startChallenges: function(){
       this.started = true;
       this.getChallenges();
     },
+
     nextQuestion: function(){
       if(this.key == 4)
         return false
@@ -128,11 +144,13 @@ export default {
 
       this.key++
     },
+
     backQuestion: function(){
       if(this.key == 0)
         return false
       this.key--
     },
+
     timeChallenge(){
       if(!this.started || this.key == 4)
         return false
@@ -164,6 +182,7 @@ export default {
 
       this.time = minute + ":" + seconds;
     }
+
   }
 }
 </script>
