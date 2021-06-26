@@ -45,32 +45,84 @@
     <b-modal ok-title="Confirmar"
              cancel-title="Cancelar"
              id="modal-edit-question"
-             @ok.prevent="updateQuestion()"
+             @ok.prevent="cancelEdit()"
              @close="cancelEdit()"
              @cancel="cancelEdit()"
              title="Editar Questão"
              button-size="sm"
              size="lg">
-      <p>A lot to do here</p>
+    <div class="p-4">
+      <b-row>
+        <b-col>
+          <label>Título:</label>
+          <b-form-input v-model="edit_question.title" id="title" type="text" size="sm" placeholder="Ex: Question 1"></b-form-input>
+        </b-col>
+        <b-col>
+          <label>Dificuldade:</label>
+          <b-form-select 
+            v-model="edit_question.level" 
+            :options="levelOpt"
+            class="mb-3"
+            id="level"
+          ></b-form-select>
+        </b-col>
+      </b-row>
+      <b-row class="mt-2">
+        <b-col>
+            <label>Descrição:</label>
+            <b-form-textarea
+              id="description"
+              v-model="edit_question.description"
+              placeholder="Ex: Quanto é o resultado da soma de 1 + 1?"
+              rows="3"
+              max-rows="6"
+            ></b-form-textarea>
+        </b-col>
+      </b-row>
+      <b-row class="mt-2">
+        <b-col>
+          <b>Alternativas</b>
+          <div v-for="alternative, index in edit_question.alternatives" :key="index">
+            <b>{{alternative.option}}:&nbsp;</b>
+            <b-form-input v-model="alternative.description" type="text" size="sm" placeholder="Ex: Question 1"></b-form-input>
+          </div>
+        </b-col>
+      </b-row>
+      <b-row class="mt-2">
+        <b></b>
+        <b-col>
+          <b>Alternativa correta</b>
+          <b-form-group>
+            <b-form-radio-group
+              class="pt-2"
+              v-model="edit_question.correctResponse"
+              :options="['A', 'B', 'C', 'D', 'E']"
+            ></b-form-radio-group>
+          </b-form-group>
+        </b-col>
+      </b-row>
+    </div>
     </b-modal>
 
     <!-- Modal de Detalhe -->
-    <b-modal ok-title="Detalhar"
+    <b-modal ok-title="Ok"
              cancel-title="Cancelar"
              id="modal-detail-question"
-             @ok.prevent="updateQuestion()"
+             @ok.prevent="closeDetail()"
+             @close="closeDetail()"
+             @cancel="closeDetail()"
              title="Detalhamento"
              button-size="sm"
              size="lg">
 
     <div class="d-33">
-      <p id="title" type="text" class="form-control-sm"><span><b>Título:&nbsp;</b></span>Questão 1</p>
-      <p id="level" type="text" class="form-control-sm"><span><b>Dificuldade:&nbsp;</b></span>Fácil</p>
-      <p id="correctResponse" type="text" class="form-control-sm text-right"><span><b>Alternativa correta:&nbsp;</b></span>A</p>
+      <p id="title" type="text" class="form-control-sm"><span><b>Título:&nbsp;</b></span>{{question.title}}</p>
+      <p id="level" type="text" class="form-control-sm"><span><b>Dificuldade:&nbsp;</b></span>{{question.level}}</p>
+      <p id="correctResponse" type="text" class="form-control-sm text-right"><span><b>Alternativa correta:&nbsp;</b></span>{{question.correctResponse}}</p>
     </div>
-    <p id="description" type="text" class="form-control-sm"><span><b>Descrição:&nbsp;</b></span>1 + 1</p>
+    <p id="description" type="text" class="form-control-sm"><span><b>Descrição:&nbsp;</b></span>{{question.description}}</p>
     <hr>
-    <div v-for="alternative, index in alternatives" :key="index">
+    <div v-for="alternative, index in question.alternatives" :key="index">
       <div><b>{{alternative.option}}:&nbsp;</b>{{alternative.description}}</div>
     </div>
     </b-modal>
@@ -110,7 +162,12 @@ export default {
       correctResponse: undefined,
       alternatives: []
     },
-    selected: null
+    selected: null,
+    levelOpt: [
+      {value: 1, text: "Fácil"  },
+      {value: 2, text: "Médio"  },
+      {value: 3, text: "Difícil"}
+    ]
   }),
 
   mounted() { this.getQuestions() },
@@ -189,7 +246,7 @@ export default {
       const service = this
       service.edit_question.title = item.title
       service.edit_question.description = item.description
-      service.edit_question.level = item.level
+      service.edit_question.level = service.getIntValFromDisplay(item.level)
       service.edit_question.correctResponse = item.correctResponse
       service.edit_question.alternatives = item.alternatives
       this.$root.$emit('bv::show::modal', 'modal-edit-question')
@@ -227,10 +284,26 @@ export default {
       const service = this
       service.question.title = item.title
       service.question.description = item.description
-      service.question.level = service.getLabelByLevel(item.level)
+      service.question.level = item.level
       service.question.correctResponse = item.correctResponse
       service.question.alternatives = item.alternatives
       this.$root.$emit('bv::show::modal', 'modal-detail-question')
+    },
+
+    closeDetail: function() {
+      this.$root.$emit('bv::hide::modal', 'modal-detail-question')
+    },
+
+    getIntValFromDisplay: function(display) {
+      if (display) {
+        if (display == 'Fácil') {
+          return 1
+        } else if (display == 'Médio') {
+          return 2
+        } else {
+          return 3
+        }
+      }
     }
 
   }

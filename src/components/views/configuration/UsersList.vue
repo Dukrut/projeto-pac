@@ -131,7 +131,7 @@
           method: "GET",
           url: "http://localhost:8000/users",
         }).then((response) => {
-          let users = response.data;
+          let users = response.data
           for (let index in users) {
             let user = users[index]
 
