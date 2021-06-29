@@ -2,10 +2,10 @@
   <div class="p-4">
 
     <h3><b-icon icon="tv"></b-icon> Desafios</h3>
-    <small>Você já completou 30 de 100 desafios.</small>
     <hr>
 
     <div v-if="!started">
+      <h5>Olá <b>{{user.name}}</b>, você já completou 30 de 100 desafios.</h5>
       <div class="col-12 d-flex justify-content-center align-middle h-25">
         <img src="../../../public/images/questions.png" class="rounded-3" style="height:62.4vh" alt="">
       </div>
@@ -22,13 +22,13 @@
   </div>
 
   <div v-else>
-    <span><b-icon icon="stopwatch"></b-icon> Tempo restante: {{ time }}</span>
+    <h5>Boa sorte <b>{{user.name}}</b>! Preste muita atenção nas perguntas para responde-las corretamente.</h5>
     <div class="d-flex flex-column bd-highlight mb-3 overflow-auto">
       <div class="p-1 bd-highlight">
         <span>{{ key+1 }}. <strong>Descrição</strong>: {{ challenges[key].description }}</span>
       </div>
       <div class="p-1 bd-highlight">
-        <span><strong>Selecione a resposta correta</strong>:</span>
+        <span><strong>Selecione a alternativa correta</strong>:</span>
         <b-form-radio-group
                 v-model="answer[key]"
                 :options="challenges[key].options"
@@ -36,6 +36,7 @@
                 inline
         ></b-form-radio-group>
       </div>
+
       <hr>
     </div>
     <div class="d-flex justify-content-center align-middle h-50">
@@ -43,9 +44,13 @@
       <b-button v-if="key != 4" class="buttons mx-2 mt-4" @click="nextQuestion()">Próxima pergunta <b-icon icon="arrow-right-square"></b-icon></b-button>
       <b-button v-else class="buttons mx-2 mt-4" @click="nextQuestion()">Enviar respostas <b-icon icon="check-circle"></b-icon></b-button>
     </div>
+    <div v-if="regexTypes().includes(answer[4])" class="d-flex justify-content-center align-middle w-100 timer">
+      <h1><b-icon icon="stopwatch"></b-icon> Tempo restante:<span class="ml-4" :style="'color:'+color">{{ time }}</span></h1>
+    </div>
     <div v-if="key == 4 && !regexTypes().includes(answer[4])" class="align-middle">
       <h2>GABARITO</h2>
       <p v-for="ans,index in answer"  :key="index"><strong>{{ index+1 }}</strong>. {{ answer[index]}}</p>
+      <h3><b-icon icon="stopwatch"></b-icon> Tempo total:<span class="ml-4" :style="'color:'+color">{{ time }}</span></h3>
     </div>
   </div>
 
@@ -55,7 +60,8 @@
 <script>
 
 export default {
-  components:{
+  props:{
+    user: {}
   },
   data: () => ({
     level: "easy",
@@ -63,12 +69,13 @@ export default {
     challenges: [],
     answer: [null, null, null, null, null],
     time: "",
+    color: "green",
     key: 0
   }),
   mounted() {
     setInterval(() => {
       this.timeChallenge()
-    }, 60000);
+    }, 1000);
   },
   methods: {
     getChallenges: function(){
@@ -127,7 +134,7 @@ export default {
       this.key--
     },
     timeChallenge(){
-      if(!this.started)
+      if(!this.started || this.key == 4)
         return false
 
       var aux = this.time.split(":")
@@ -140,6 +147,14 @@ export default {
         minute--
         seconds = 59;
       }
+
+      if(minute > 5)
+        this.color = "green"
+      else if(minute <= 5 && minute >= 3)
+        this.color = "orange"
+      else
+        this.color = "red"
+
 
       if(minute < 10)
         minute = "0" + String(minute)
@@ -160,5 +175,9 @@ export default {
   }
   .buttons{
     background-color: #1A526B !important;
+  }
+
+  .timer{
+    margin-top: 10%;
   }
 </style>

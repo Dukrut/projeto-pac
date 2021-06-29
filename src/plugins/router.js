@@ -23,7 +23,8 @@ const routes = [
     {
         path: '/system',
         name: 'Sistema',
-        component: System
+        component: System,
+        props: true
     },
     {
         path: '/users',
@@ -50,7 +51,6 @@ const routes = [
 
 const router = new VueRouter({
     mode: 'history',
-    base: 'http://localhost:8080',
     routes
 })
 
