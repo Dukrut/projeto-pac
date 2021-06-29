@@ -21,13 +21,13 @@
             <th class="p-2" v-for="field, index in fields" :key="index">{{field.name}}</th>
           </thead>      
           <tbody class="border">
-        <tr class="border" :class="{'item-table-striped':index%2 == 0, 'item-table': index%2 != 0}" v-for="item, index in items" :key="index">
-          <td class="p-2 border text-justify"> {{item.position}} </td>
-          <td class="p-2 border text-justify">{{item.student}}</td>
-          <td class="p-2 border text-justify"> {{item.points}} </td>
-        </tr>
-      </tbody>
-    </table>
+            <tr class="border" :class="{'item-table-striped':index%2 == 0, 'item-table': index%2 != 0}" v-for="item, index in items" :key="index">
+              <td class="p-2 border text-justify"> {{item.position}} </td>
+              <td class="p-2 border text-justify">{{item.student}}</td>
+              <td class="p-2 border text-justify"> {{item.points}} </td>
+            </tr>
+          </tbody>
+        </table>
     </div>
   </div>
 </template>
@@ -269,12 +269,12 @@ export default {
 
     regexTypes: function() {
       return [null, undefined, ""]
-    }
+    },
 
     getRanking: function() {
       this.$axios({
         method: "GET",
-        url: "http://localhost:8000/users/ranking",
+        url: "http://localhost:8000/users/ranking"
       }).then((response) => {
         let ranking = response.data
         for (let index in ranking) {
