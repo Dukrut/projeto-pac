@@ -36,6 +36,7 @@
                 inline
         ></b-form-radio-group>
       </div>
+
       <hr>
     </div>
     <div class="d-flex justify-content-center align-middle h-50">
