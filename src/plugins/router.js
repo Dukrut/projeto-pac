@@ -6,6 +6,8 @@ import UsersList from '../components/views/configuration/UsersList.vue'
 import GroupList from '../components/views/configuration/GroupList.vue'
 import Challenges from '../components/views/Challenges.vue'
 import Ranking from '../components/views/Ranking.vue'
+import Questions from '../components/views/Questions.vue'
+import Reports from '../components/views/Reports.vue'
 
 Vue.use(VueRouter)
 
@@ -45,6 +47,16 @@ const routes = [
         path: '/ranking',
         name: 'Ranking',
         component: Ranking
+    },
+    {
+        path: '/questions',
+        name: 'Questões',
+        component: Questions
+    },
+    {
+        path: '/reports',
+        name: 'Relatórios',
+        component: Reports
     }
 
 ]

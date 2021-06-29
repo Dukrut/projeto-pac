@@ -82,16 +82,16 @@
       <label class="mt-1" for=""><i>Desafios</i></label>
       <br>
       <div class="form-check form-check-inline mt-1 ml-2">
-        <input class="form-check-input" type="checkbox" id="conf_chanllenges" v-model="edit_group.permissions.actions.conf_chanllenges">
-        <label class="form-check-label" for="conf_chanllenges">Criar, editar e excluir desafios</label>
+        <input class="form-check-input" type="checkbox" id="conf_challenges" v-model="edit_group.permissions.actions.conf_challenges">
+        <label class="form-check-label" for="conf_challenges">Criar, editar e excluir desafios</label>
       </div>
       <div class="form-check form-check-inline">
         <input class="form-check-input" type="checkbox" id="view_challenges" v-model="edit_group.permissions.actions.view_challenges">
         <label class="form-check-label" for="view_challenges">Visualizar desafios</label>
       </div>
       <div class="form-check form-check-inline">
-        <input class="form-check-input" type="checkbox" id="play_challegens" v-model="edit_group.permissions.actions.play_challegens">
-        <label class="form-check-label" for="play_challegens">Jogar desafios</label>
+        <input class="form-check-input" type="checkbox" id="play_challenges" v-model="edit_group.permissions.actions.play_challenges">
+        <label class="form-check-label" for="play_challenges">Jogar desafios</label>
       </div>
       <br>
       <label class="mt-4" for=""><i>Configurações</i></label>
@@ -160,16 +160,16 @@
       <label class="mt-1" for=""><i>Desafios</i></label>
       <br>
       <div class="form-check form-check-inline mt-1 ml-2">
-        <input class="form-check-input" type="checkbox" id="conf_chanllenges" v-model="new_group.permissions.actions.conf_chanllenges">
-        <label class="form-check-label" for="conf_chanllenges">Criar, editar e excluir desafios</label>
+        <input class="form-check-input" type="checkbox" id="conf_challenges" v-model="new_group.permissions.actions.conf_challenges">
+        <label class="form-check-label" for="conf_challenges">Criar, editar e excluir desafios</label>
       </div>
       <div class="form-check form-check-inline">
         <input class="form-check-input" type="checkbox" id="view_challenges" v-model="new_group.permissions.actions.view_challenges">
         <label class="form-check-label" for="view_challenges">Visualizar desafios</label>
       </div>
       <div class="form-check form-check-inline">
-        <input class="form-check-input" type="checkbox" id="play_challegens" v-model="new_group.permissions.actions.play_challegens">
-        <label class="form-check-label" for="play_challegens">Jogar desafios</label>
+        <input class="form-check-input" type="checkbox" id="play_challenges" v-model="new_group.permissions.actions.play_challenges">
+        <label class="form-check-label" for="play_challenges">Jogar desafios</label>
       </div>
       <br>
       <label class="mt-4" for=""><i>Configurações</i></label>
@@ -208,53 +208,8 @@ export default {
       {name: "Editar"},
       {name: "Excluir"}
     ],
-    items: [
-      {
-        name: 'Dev',
-        description: "Desenvolvedores do Sistema",
-        permissions: {
-          modules:{
-            challenges: false,
-            ranking: true,
-            reports: false,
-            configuration: true
-          },
-          actions:{
-            conf_chanllenges:true,
-            view_challenges: true,
-            play_challegens: true,
-            conf_users: true,
-            view_users: true,
-            conf_groups: true,
-            view_groups: true
-          }
-        },
-        id: 1
-      },
-      {
-        name: 'Usuários',
-        description: "Usuários comuns.",
-        permissions: {
-          modules:{
-            challenges: true,
-            ranking: true,
-            reports: false,
-            configuration: false
-          },
-          actions:{
-            conf_chanllenges:false,
-            view_challenges: true,
-            play_challegens: true,
-            conf_users: false,
-            view_users: false,
-            conf_groups: false,
-            view_groups: false
-          }
-        },
-        id: 2
-      },
-    ],
-    remove_group:{
+    items: [],
+    remove_group: {
       name: null,
       id: null
     },
@@ -270,9 +225,9 @@ export default {
           configuration: false
         },
         actions:{
-          conf_chanllenges:false,
+          conf_challenges:false,
           view_challenges: false,
-          play_challegens: false,
+          play_challenges: false,
           conf_users: false,
           view_users: false,
           conf_groups: false,
@@ -291,9 +246,9 @@ export default {
           configuration: false
         },
         actions:{
-          conf_chanllenges:false,
+          conf_challenges:false,
           view_challenges: true,
-          play_challegens: true,
+          play_challenges: true,
           conf_users: false,
           view_users: false,
           conf_groups: false,
@@ -315,17 +270,59 @@ export default {
 
   methods: {
 
-    getGroups() {
-      this.$axios({
+    getGroups: function() {
+      const service = this
+      service.$axios({
         method: "GET",
         url: "http://localhost:8000/groups",
       }).then((response) => {
-        let groups = response.data
-        console.log(groups)
+        service.prepare(response.data)
       }).catch((error) => {
         console.error(error)
-        this._toast("Erro ao requisitar informações do servidor", "error")
+        service._toast("Erro ao requisitar informações do servidor", "error")
       })
+    },
+
+    prepare: function(groups = []) {
+      for(let index in groups) {
+        let group = groups[index]
+        let item = {
+          id: undefined,
+          name: undefined,
+          description: undefined,
+          permissions: {
+            modules: {
+              challenges: false,
+              ranking: false,
+              reports: false,
+              configuration: false
+            },
+            actions: {
+              conf_challenges: false,
+              play_challenges: false,
+              conf_users: false,
+              view_users: false,
+              conf_groups: false,
+              view_groups: false
+            }
+          }
+        }
+        item.id = group.id
+        item.name = group.name
+        item.description = group.description
+        item.permissions.modules.challenges = group.permission.viewChallenges
+        item.permissions.modules.ranking = group.permission.viewRanking
+        item.permissions.modules.reports = group.permission.viewReports
+        item.permissions.modules.configuration = group.permission.viewConfig
+        item.permissions.actions.conf_challenges = group.action.confChallenges
+        item.permissions.actions.play_challenges = group.action.playChallenges
+        item.permissions.actions.conf_users = group.action.confUsers
+        item.permissions.actions.view_users = group.action.viewUsers
+        item.permissions.actions.conf_groups = group.action.confGroups
+        item.permissions.actions.view_groups = group.action.viewGroups
+
+        this.items.push(item)
+      }
     },
 
     showModalEdit:function (item){
@@ -342,11 +339,11 @@ export default {
       this.$root.$emit('bv::show::modal', 'modal-remove-group')
     },
 
-    showModalCreate:function (){
+    showModalCreate: function (){
       this.$root.$emit('bv::show::modal', 'modal-new-group')
     },
 
-    cancelEdit:function(){
+    cancelEdit: function() {
       this.edit_group = {
         name: null,
         id: null,
@@ -359,9 +356,9 @@ export default {
             configuration: false
           },
           actions:{
-            conf_chanllenges:false,
+            conf_challenges:false,
             view_challenges: false,
-            play_challegens: false,
+            play_challenges: false,
             conf_users: false,
             view_users: false,
             conf_groups: false,
@@ -395,9 +392,9 @@ export default {
             configuration: false
           },
           actions:{
-            conf_chanllenges:false,
+            conf_challenges:false,
             view_challenges: true,
-            play_challegens: true,
+            play_challenges: true,
             conf_users: false,
             view_users: false,
             conf_groups: false,
@@ -491,7 +488,7 @@ export default {
       if (!this.validInputs(this.edit_group, this.error_edit_group))
         return false
 
-      var json = this.edit_group;
+      let json = this.edit_group;
 
       this.$axios({
         method: "POST",
@@ -509,22 +506,24 @@ export default {
     },
 
     saveRemoveGroup: function(){
-      var json = this.remove_group
-
       this.$axios({
-        method: "POST",
-        url: "http://localhost:8000/group/delete",
-        data: json
+        method: "DELETE",
+        url: "http://localhost:8000/groups/delete/" + this.remove_group.id
       }).then((response) => {
-        if (response.status == 200){
-          this._toast("Salvo com sucesso!", "success")
-          this.$root.$emit('bv::hide::modal', 'modal-remove-group')
+        if (response.status == 200) {
+          this._toast("Excluído com sucesso!", "success")
+          this.refresh()
         }
       }).catch((error) => {
-        this._toast("Não foi possível salvar, tente novamente mais tarde.", "error")
+        this._toast("Não foi possível excluir esse grupo, tente novamente mais tarde.", "error")
         console.error(error);
+      }).finally(() => {
+        this.$root.$emit('bv::hide::modal', 'modal-remove-group')
       })
+    },
 
+    refresh: function() {
+      console.log("Refresh")
     }
 
   }
