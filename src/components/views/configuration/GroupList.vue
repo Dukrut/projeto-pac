@@ -284,48 +284,35 @@ export default {
     },
 
     prepare: function(groups = []) {
-      for(let index in groups) {
+      for (let index in groups) {
         let group = groups[index]
         let item = {
-          id: undefined,
-          name: undefined,
-          description: undefined,
+          id: group.id,
+          name: group.name,
+          description: group.description,
           permissions: {
             modules: {
-              challenges: false,
-              ranking: false,
-              reports: false,
-              configuration: false
+              challenges: group.permission.viewChallenges,
+              ranking: group.permission.viewRanking,
+              reports: group.permission.viewReports,
+              configuration: group.permission.viewConfig
             },
             actions: {
-              conf_challenges: false,
-              play_challenges: false,
-              conf_users: false,
-              view_users: false,
-              conf_groups: false,
-              view_groups: false
+              conf_challenges: group.action.confChallenges,
+              play_challenges: group.action.playChallenges,
+              conf_users: group.action.confUsers,
+              view_users: group.action.viewUsers,
+              conf_groups: group.action.confGroups,
+              view_groups: group.action.viewGroups
             }
           }
         }
-        item.id = group.id
-        item.name = group.name
-        item.description = group.description
-        item.permissions.modules.challenges = group.permission.viewChallenges
-        item.permissions.modules.ranking = group.permission.viewRanking
-        item.permissions.modules.reports = group.permission.viewReports
-        item.permissions.modules.configuration = group.permission.viewConfig
-        item.permissions.actions.conf_challenges = group.action.confChallenges
-        item.permissions.actions.play_challenges = group.action.playChallenges
-        item.permissions.actions.conf_users = group.action.confUsers
-        item.permissions.actions.view_users = group.action.viewUsers
-        item.permissions.actions.conf_groups = group.action.confGroups
-        item.permissions.actions.view_groups = group.action.viewGroups
 
         this.items.push(item)
       }
     },
 
-    showModalEdit:function (item){
+    showModalEdit:function (item) {
       this.edit_group.name = item.name;
       this.edit_group.id = item.id;
       this.edit_group.description = item.description;
@@ -333,13 +320,13 @@ export default {
       this.$root.$emit('bv::show::modal', 'modal-edit-group')
     },
 
-    showModalRemove:function (item){
+    showModalRemove:function (item) {
       this.remove_group.name = item.name;
       this.remove_group.id = item.id;
       this.$root.$emit('bv::show::modal', 'modal-remove-group')
     },
 
-    showModalCreate: function (){
+    showModalCreate: function () {
       this.$root.$emit('bv::show::modal', 'modal-new-group')
     },
 
@@ -373,14 +360,14 @@ export default {
       }
     },
 
-    cancelRemove:function(){
+    cancelRemove:function() {
       this.remove_group = {
         id: null,
         name: null
       }
     },
 
-    cancelNew: function(){
+    cancelNew: function() {
       this.new_group  = {
         name: null,
         description: null,
@@ -469,7 +456,7 @@ export default {
 
       this.$axios({
         method: "POST",
-        url: "http://localhost:8000/group/create",
+        url: "http://localhost:8000/groups/create",
         data: json
       }).then((response) => {
         if (response.status == 200){
@@ -484,7 +471,7 @@ export default {
 
     },
 
-    saveEditGroup: function(){
+    saveEditGroup: function() {
       if (!this.validInputs(this.edit_group, this.error_edit_group))
         return false
 
@@ -492,7 +479,7 @@ export default {
 
       this.$axios({
         method: "POST",
-        url: "http://localhost:8000/group/edit",
+        url: "http://localhost:8000/groups/update",
         data: json
       }).then((response) => {
         if (response.status == 200){
