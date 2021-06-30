@@ -126,6 +126,7 @@ export default {
     login: function() {
       if (!this.validInputs(this.form))
         return false
+
       this.loading = true
 
       var json = {
@@ -139,18 +140,14 @@ export default {
         data: json
       }).then((response) => {
         if (response.status == 200)
-          this.authenticated = true
+          this.$router.push({ name: 'Sistema', params: {user: response.data}})
       }).catch((error) => {
-        console.error(error);
+        console.error("ERRO = ", error);
         this._toast("E-mail ou senha incorreto, verifique e tente novamente.", "error")
       }).finally(() =>{
         setTimeout(() => {
           this.loading = false;
-          console.log(this.authenticated)
-          if (this.authenticated)
-            window.location.href = "/system"
         }, 500)
-
       });
 
     }

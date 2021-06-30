@@ -177,8 +177,8 @@
           }
         }).catch((error) => {
           console.error(error);
-          this._toast("Erro ao requisitar informações do servidor", "error")
-        })
+          // this._toast("Erro ao requisitar informações do servidor", "error")
+        })  
       },
 
       formatDate: function(date) {

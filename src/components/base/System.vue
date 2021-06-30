@@ -1,6 +1,6 @@
 <template>
   <div class="body">
-    <navbar></navbar>
+    <navbar :user="user_infos"></navbar>
   </div>
 </template>
 
@@ -8,21 +8,24 @@
 import Navbar from "./Navbar"
 
 export default {
+  props:{
+    user:{}
+  },
   components:{
     Navbar
   },
   data: () => ({
-    card_title: "Seja Bem-Vind@!",
-    form: {
-      email: "",
-      password: ""
-    },
-    valid: {
-      email: null,
-      password: null,
-    },
-    loading: false,
+  user_infos: {}
   }),
+    created(){
+    // TODO; Verificar outra forma de validar isso...
+    if (this.user != undefined) {
+      this.user_infos = this.user;
+      sessionStorage.setItem("user", JSON.stringify(this.user))
+    }else {
+      this.user_infos = JSON.parse(sessionStorage.getItem("user"))      
+    }
+  },
   methods: {
     _toast: function(_message, _type){
       this.$toast.open({

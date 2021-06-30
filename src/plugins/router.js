@@ -5,6 +5,7 @@ import System from '../components/base/System.vue'
 import UsersList from '../components/views/configuration/UsersList.vue'
 import GroupList from '../components/views/configuration/GroupList.vue'
 import Challenges from '../components/views/Challenges.vue'
+import Ranking from '../components/views/Ranking.vue'
 
 Vue.use(VueRouter)
 
@@ -22,7 +23,8 @@ const routes = [
     {
         path: '/system',
         name: 'Sistema',
-        component: System
+        component: System,
+        props: true
     },
     {
         path: '/users',
@@ -38,13 +40,17 @@ const routes = [
         path: '/dashboard',
         name: 'Desafios',
         component: Challenges
+    },
+    {
+        path: '/ranking',
+        name: 'Ranking',
+        component: Ranking
     }
 
 ]
 
 const router = new VueRouter({
     mode: 'history',
-    base: 'http://localhost:8080',
     routes
 })
 
