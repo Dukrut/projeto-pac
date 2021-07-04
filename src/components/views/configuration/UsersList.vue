@@ -6,7 +6,7 @@
         <b-button size="sm" class="buttons" v-b-modal.modal-new-users><b-icon icon="plus"></b-icon> Novo Usuário</b-button>
       </b-button-group>
 
-      <!--<table class="w-100 border">
+      <table class="w-100 border">
         <thead class="text-center border header-table">
           <th class="p-2" v-for="field, index in fields" :key="index">{{field.name}}</th>
         </thead>
@@ -29,7 +29,7 @@
             </td>
           </tr>
         </tbody>
-      </table>-->
+      </table>
       <!-- modal add users -->
       <div>
         <b-modal id="modal-new-users" 
@@ -166,9 +166,10 @@
 
     methods: {
       getUsers: function() {
-        this.$axios({
+        const service = this
+        service.$axios({
           method: "GET",
-          url: "http://localhost:8080/users",
+          url: "http://localhost:8000/users",
         }).then((response) => {
           let users = response.data
           for (let index in users) {
@@ -191,13 +192,13 @@
             if (!user.group) user.group = group
             if (!user.school) user.school = school
             if (!user.classroom) user.classroom = classroom
-            user.birth = this.formatDate(user.birth)
+            user.birth = service.$moment().format('dd/MM/yyyy')
 
-            this.items.push(user)
+            service.items.push(user)
           }
         }).catch((error) => {
           console.error(error);
-          // this._toast("Erro ao requisitar informações do servidor", "error")
+          service._toast("Erro ao requisitar informações do servidor", "error")
         })  
       },
 
@@ -214,23 +215,21 @@
         if (!this.validInputs(this.new_user, this.error_new_user))
           return false
 
-        // var json = this.new_user;
-        return false;
-        // console.log(json);
-        // this.$axios({
-        //   method: "POST",
-        //   url: "http://localhost:8000/group/create",
-        //   data: json
-        // }).then((response) => {
-        //   if (response.status == 200){
-        //     this._toast("Salvo com sucesso!", "success")
-        //     this.$root.$emit('bv::hide::modal', 'modal-new-group')
-        //   }
-        // }).catch((error) => {
-
-        //   this._toast("Não foi possível salvar, tente novamente mais tarde.", "error")
-        //   console.error(error);
-        // })
+        var json = this.new_user
+        console.log(json);
+        this.$axios({
+          method: "POST",
+          url: "http://localhost:8000/users/create",
+          data: json
+        }).then((response) => {
+          if (response.status == 200){
+            this._toast("Salvo com sucesso!", "success")
+            this.$root.$emit('bv::hide::modal', 'modal-new-group')
+          }
+        }).catch((error) => {
+          this._toast("Não foi possível salvar, tente novamente mais tarde.", "error")
+          console.error(error);
+        })
       },
 
       _toast: function(_message, _type){
@@ -258,7 +257,7 @@
         }
         var message = (list_fields.length > 1) ? "Os campos " : "O campo"
         list_fields.forEach(element => {
-            if(element == "fullname")
+            if (element == "fullname")
               message += "<b> nome completo </b>,"
             else if(element == "email")
               message += "<b> email </b>,"

@@ -272,17 +272,18 @@ export default {
     },
 
     getRanking: function() {
-      this.$axios({
+      const service = this
+      service.$axios({
         method: "GET",
         url: "http://localhost:8000/users/ranking"
       }).then((response) => {
         let ranking = response.data
         for (let index in ranking) {
-          this.items.push(ranking[index])
+          service.items.push(ranking[index])
         }
       }).catch((error) => {
         console.error(error)
-        this._toast("Erro ao requisitar informações do servidor", "error")
+        service._toast("Erro ao requisitar informações do servidor", "error")
       })
     }
 

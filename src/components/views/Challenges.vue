@@ -84,10 +84,13 @@ export default {
 
     getChallenges: function() {
       const service = this
+
+      let user = JSON.parse(sessionStorage.getItem('user'))
+
       service.time = "10:00"
       service.$axios({
         method: "GET",
-        url: "http://localhost:8000/questions/level/" + parseInt(service.level),
+        url: "http://localhost:8000/questions/" + user.id + "/" + parseInt(service.level),
       }).then((response) => {
         let questions = response.data 
         if (!questions.length) {
