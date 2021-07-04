@@ -124,32 +124,32 @@ export default {
       return valid
     },
     login: function() {
-      if (!this.validInputs(this.form))
+      const service = this
+      if (!service.validInputs(service.form))
         return false
 
-      this.loading = true
+      service.loading = true
 
-      var json = {
-        login: this.form.email,
-        password: this.form.password,
+      let json = {
+        login: service.form.email,
+        password: service.form.password,
         token: ""
       }
-      this.$axios({
+      service.$axios({
         method: "POST",
         url: "http://localhost:8000/login",
         data: json
       }).then((response) => {
         if (response.status == 200)
-          this.$router.push({ name: 'Sistema', params: {user: response.data}})
+          service.$router.push({ name: 'Sistema', params: {user: response.data}})
       }).catch((error) => {
         console.error("ERRO = ", error);
-        this._toast("E-mail ou senha incorreto, verifique e tente novamente.", "error")
+        service._toast("E-mail ou senha incorreto, verifique e tente novamente.", "error")
       }).finally(() =>{
         setTimeout(() => {
-          this.loading = false;
+          service.loading = false;
         }, 500)
-      });
-
+      })
     }
   }
 }

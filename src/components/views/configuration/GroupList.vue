@@ -271,15 +271,14 @@ export default {
   methods: {
 
     getGroups: function() {
-      const service = this
-      service.$axios({
+      this.$axios({
         method: "GET",
         url: "http://localhost:8000/groups",
       }).then((response) => {
-        service.prepare(response.data)
+        this.prepare(response.data)
       }).catch((error) => {
         console.error(error)
-        service._toast("Erro ao requisitar informações do servidor", "error")
+        this._toast("Erro ao requisitar informações do servidor", "error")
       })
     },
 
@@ -312,7 +311,7 @@ export default {
       }
     },
 
-    showModalEdit:function (item) {
+    showModalEdit: function(item) {
       this.edit_group.name = item.name;
       this.edit_group.id = item.id;
       this.edit_group.description = item.description;
@@ -320,7 +319,7 @@ export default {
       this.$root.$emit('bv::show::modal', 'modal-edit-group')
     },
 
-    showModalRemove:function (item) {
+    showModalRemove: function(item) {
       this.remove_group.name = item.name;
       this.remove_group.id = item.id;
       this.$root.$emit('bv::show::modal', 'modal-remove-group')
@@ -448,39 +447,85 @@ export default {
       error[prop] = null
     },
 
-    saveNewGroup: function (){
-      if (!this.validInputs(this.new_group, this.error_new_group))
+    saveNewGroup: () => {
+      const service = this
+      const groupToSave = service.new_group
+
+      if (!service.validInputs(groupToSave, service.error_new_group))
         return false
 
-      var json = this.new_group;
+      const view = groupToSave.permissions.modules
+      const actions = groupToSave.permissions.actions
 
-      this.$axios({
+      let newGroup = {
+        name: groupToSave.name,
+        description: groupToSave.description,
+        permission: {
+          viewChallenges: view.challenges,
+          viewRanking: view.ranking,
+          viewReports: view.reports,
+          viewConfig: view.configuration
+        },
+        action: {
+          confChallenges: actions.conf_challenges,
+          playChallenges: actions.play_challenges,
+          confUsers: actions.conf_users,
+          viewUsers: actions.view_users,
+          confGroups: actions.conf_groups,
+          viewGroups: actions.view_groups
+        }
+      }
+
+      service.$axios({
         method: "POST",
         url: "http://localhost:8000/groups/create",
-        data: json
+        data: newGroup
       }).then((response) => {
         if (response.status == 200){
-          this._toast("Salvo com sucesso!", "success")
-          this.$root.$emit('bv::hide::modal', 'modal-new-group')
+          service._toast("Salvo com sucesso!", "success")
+          service.$root.$emit('bv::hide::modal', 'modal-new-group')
         }
       }).catch((error) => {
 
-        this._toast("Não foi possível salvar, tente novamente mais tarde.", "error")
+        service._toast("Não foi possível salvar, tente novamente mais tarde.", "error")
         console.error(error);
       })
 
     },
 
-    saveEditGroup: function() {
+    saveEditGroup: () => {
+      const service = this
+      const groupToEdit = service.edit_group
       if (!this.validInputs(this.edit_group, this.error_edit_group))
         return false
 
-      let json = this.edit_group;
+      const view = groupToEdit.permissions.modules
+      const actions = groupToEdit.permissions.actions
+
+      let updated = {
+        id: groupToEdit.id,
+        name: groupToEdit.name,
+        description: groupToEdit.description,
+        permission: {
+          viewChallenges: view.challenges,
+          viewRanking: view.ranking,
+          viewReports: view.reports,
+          viewConfig: view.configuration
+        },
+        action: {
+          confChallenges: actions.conf_challenges,
+          playChallenges: actions.play_challenges,
+          confUsers: actions.conf_users,
+          viewUsers: actions.view_users,
+          confGroups: actions.conf_groups,
+          viewGroups: actions.view_groups
+        }
+      }
 
       this.$axios({
         method: "POST",
         url: "http://localhost:8000/groups/update",
-        data: json
+        data: updated
       }).then((response) => {
         if (response.status == 200){
           this._toast("Salvo com sucesso!", "success")
@@ -492,7 +537,7 @@ export default {
       })
     },
 
-    saveRemoveGroup: function(){
+    saveRemoveGroup: function() {
       this.$axios({
         method: "DELETE",
         url: "http://localhost:8000/groups/delete/" + this.remove_group.id

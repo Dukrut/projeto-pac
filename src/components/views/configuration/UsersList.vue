@@ -94,8 +94,8 @@
                 <b-form-select
                   id="group"
                   class="mt-2"
-                  :options="options"
-                  :value="options.value"
+                  :options="groups"
+                  :value="groups.value"
                   v-model="new_user.group" 
                   @input="clearError('group', error_new_user)" 
                   :state="error_new_user.group"
@@ -153,15 +153,11 @@
       items: [],
       selected: null,
       status: "Não",
-      options: [
-        {value: null, text: '-- Selecione --', disabled: true },
-        {text: 'Professores', value:"teacher"},
-        {text: 'Alunos', value:"students"}
-      ]
+      groups: [{value: null, text: '-- Selecione --', disabled: true }]
     }),
 
     mounted() { 
-      this.getUsers() 
+      this.getUsers()
     },
 
     methods: {
@@ -192,7 +188,7 @@
             if (!user.group) user.group = group
             if (!user.school) user.school = school
             if (!user.classroom) user.classroom = classroom
-            user.birth = service.$moment().format('dd/MM/yyyy')
+            user.birth = service.$moment().format('DD/MM/Y') //TODO ajustar com dia data certa
 
             service.items.push(user)
           }
@@ -200,11 +196,6 @@
           console.error(error);
           service._toast("Erro ao requisitar informações do servidor", "error")
         })  
-      },
-
-      formatDate: function(date) {
-        let newDate = new Date(date)      
-        return newDate.getDate() + '/' + (newDate.getMonth() + 1) + '/' + newDate.getFullYear();
       },
 
       clearError: function(prop, error) {
