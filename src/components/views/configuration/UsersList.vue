@@ -3,7 +3,7 @@
       <h3><b-icon icon="person"></b-icon> Usuários</h3>
       <hr>
       <b-button-group class="mb-3 mt-2">
-        <b-button size="sm" class="buttons" v-b-modal.modal-new-users><b-icon icon="plus"></b-icon> Novo Usuário</b-button>
+        <b-button size="sm" class="buttons" @click="showModalCreate()" v-b-modal.modal-new-users><b-icon icon="plus"></b-icon> Novo Usuário</b-button>
       </b-button-group>
 
       <table class="w-100 border">
@@ -107,6 +107,18 @@
           </b-row>
         </b-modal>
       </div>
+      <div>
+        <b-modal ok-title="Confirmar"
+        cancel-title="Cancelar"
+        id="modal-remove-user"
+        @ok.prevent="saveRemoveUser()"
+        @close="cancelRemove()"
+        title="Excluir usuário"
+        button-size="sm">
+        <p>Você tem certeza que deseja remover <b>{{remove_user.name}}</b> do sistema?</p>
+        <p>Essa acão resultará na exclusão de todos os dados desse usuário e removerá o acesso do mesmo.</p>
+        </b-modal>
+      </div>
   </div>
 </template>
 
@@ -149,6 +161,10 @@
         city: null,
         status: null,
         group: null
+      },
+      remove_user: {
+        id: null,
+        name: null
       },
       items: [],
       selected: null,
@@ -206,12 +222,33 @@
         if (!this.validInputs(this.new_user, this.error_new_user))
           return false
 
-        var json = this.new_user
-        console.log(json);
+        let userModal = this.new_user
+
+        let newUser = {
+          name: userModal.fullname,
+          email: userModal.email,
+          phone: userModal.phone,
+          flagMaster: userModal.status ? 1 : 0,
+          birth: this.$moment(userModal.birth).format('DD/MM/Y'),
+          group: {
+            id: userModal.group
+          },
+          address: {
+            city: userModal.city,
+            uf: {
+              uf: null,
+              name: null
+            }
+          }
+        }
         this.$axios({
           method: "POST",
           url: "http://localhost:8000/users/create",
-          data: json
+          headers: {
+            "content-type": "application/json",
+            "Accept": "application/json"
+          },
+          data: newUser
         }).then((response) => {
           if (response.status == 200){
             this._toast("Salvo com sucesso!", "success")
@@ -281,6 +318,63 @@
 
         return valid
       },
+
+      saveRemoveUser: function() {
+        this.$axios({
+          method: 'DELETE',
+          url:'http://localhost:8000/users/delete/' + this.remove_user.id
+        }).then((response) => {
+          if (response.status == 200)
+            this._toast('Usuário removido com sucesso', 'success')
+        }).catch((error) => {
+          this._toast('Não foi possível excluir esse usuário, tente novamente mais tarde.', 'error')
+          console.error(error);
+        }).finally(() => {
+          this.$root.$emit('bv::hide::modal', 'modal-remove-user')
+        })
+      },
+
+      showModalRemove: function(user) {
+        this.remove_user.id = user.id,
+        this.remove_user.name = user.name
+        this.$root.$emit('bv::show::modal', 'modal-remove-user')
+      },
+
+      cancelRemove: function() {
+        this.remove_user = {
+          id: null,
+          name: null
+        }
+      },
+
+      getGroupsForRegistry: function() {
+        this.$axios({
+        method: "GET",
+        url: "http://localhost:8000/groups",
+      }).then((response) => {
+        if (this.groups.length == 1) {
+          let groups = response.data
+            for (let index in groups) {
+              let group = groups[index]
+              let item = {
+                value: group.id,
+                text: group.name,
+                disabled: false
+              }
+              this.groups.push(item)
+        }
+        }
+        
+      }).catch((error) => {
+        console.error(error)
+        this._toast("Erro ao requisitar informações do servidor", "error")
+      })
+      },
+
+      showModalCreate: function() {
+        this.$root.$emit('bv::show::modal', 'modal-new-users')
+        this.getGroupsForRegistry()
+      }
 
     }
   }
