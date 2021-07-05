@@ -17,10 +17,10 @@
       </b-navbar-nav>
     </b-navbar>
     <div>
-      <users-list v-if="view == 'Usuários'"></users-list>
-      <group-list v-else-if="view == 'Grupos'"></group-list>
+      <users-list v-if="view == 'Usuários' && user.action.viewUsers"></users-list>
+      <group-list v-else-if="view == 'Grupos' && user.action.viewGroups"></group-list>
       <challenges :user='user' v-else-if="view == 'Desafios'"></challenges>
-      <ranking v-else-if="view == 'Ranking'"></ranking>
+      <ranking v-else-if="view == 'Ranking' && user.permission.viewRanking"></ranking>
       <questions v-else-if="view == 'Questões'"></questions>
       <reports v-else-if="view == 'Relatórios'"></reports>
     </div>
@@ -37,8 +37,8 @@ import Questions from '../views/Questions.vue'
 import Reports from '../views/Reports.vue'
 
 export default {
-  props:{
-    user: {}
+  props: {
+    user: JSON.parse(sessionStorage.getItem('user'))
   },
   components:{
     UsersList,
@@ -50,7 +50,13 @@ export default {
   },
   data: () => ({
     view: "Desafios",
+    user: JSON.parse(sessionStorage.getItem('user'))
   }),
+
+  mounted() {
+    console.log(this.user)
+  },
+
   methods: {
     changeView: function(view){
       this.view = view
