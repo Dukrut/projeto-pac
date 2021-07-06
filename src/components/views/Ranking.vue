@@ -43,13 +43,13 @@
     margin: auto;
   }
   #podium, #labels {
-    width: 49%;
+    width: 57%;
     height: 40%;
     margin: auto;
   }
   #podium {
     margin-top: 70px;
-    margin-left: 25%;
+    margin-left: 20.99%;
     position: relative;
   }
   .podiumPosition, .podiumName {
