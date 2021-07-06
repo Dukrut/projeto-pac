@@ -3,7 +3,7 @@
       <h3><b-icon icon="person"></b-icon> Usuários</h3>
       <hr>
       <b-button-group class="mb-3 mt-2">
-        <b-button size="sm" class="buttons" v-b-modal.modalUsers><b-icon icon="plus"></b-icon> Novo Usuário</b-button>
+        <b-button size="sm" class="buttons" @click="showModalCreate()" v-b-modal.modal-new-users><b-icon icon="plus"></b-icon> Novo Usuário</b-button>
       </b-button-group>
 
       <table class="w-100 border">
@@ -30,66 +30,93 @@
           </tr>
         </tbody>
       </table>
-
       <!-- modal add users -->
       <div>
-        <b-modal id="modalUsers" size="lg" title="Novo Usuário">
+        <b-modal id="modal-new-users" 
+                  size="lg" 
+                  ok-title="Confirmar"
+                  cancel-title="Cancelar"
+                  @cancel="cancelNew()"
+                  @ok.prevent="saveNewUser()"
+                  button-size="sm"
+                  title="Novo Usuário">
           <b-row>
             <b-col>
               <label for="fullname">Nome Completo</label>
-              <b-form-input id="fullname" type="text" size="sm" placeholder="nome completo"></b-form-input>
+              <b-form-input id="fullname" type="text" size="sm" v-model="new_user.fullname" @input="clearError('fullname', error_new_user)" :state="error_new_user.fullname" placeholder="Ex: Maria Lopes da Silva"></b-form-input>
             </b-col>
             <b-col>
               <label for="email">Email</label>
-              <b-form-input id="email" type="email" size="sm" placeholder="example@example.com"></b-form-input>
+              <b-form-input id="email" type="email" size="sm" v-model="new_user.email" @input="clearError('email', error_new_user)" :state="error_new_user.email" placeholder="Ex: example@example.com"></b-form-input>
             </b-col>
           </b-row>
-
           <b-row class="mt-2">
             <b-col>
               <label for="birth">Data de Nascimento</label>
-              <b-form-input id="birth" type="date" size="sm" placeholder="00/00/0000"></b-form-input>
+              <b-form-input id="birth" type="date" size="sm" v-model="new_user.birth" @input="clearError('birth', error_new_user)" :state="error_new_user.birth"></b-form-input>
             </b-col>
             <b-col>
               <label for="phone">Telefone</label>
-              <b-form-input id="phone" type="tel" size="sm" placeholder="Ex: (99) 99999-9999"></b-form-input>
+              <b-form-input id="phone" type="tel" size="sm" v-model="new_user.phone" @input="clearError('phone', error_new_user)" :state="error_new_user.phone" placeholder="Ex: (99) 99999-9999"></b-form-input>
             </b-col>
           </b-row>
-
           <b-row class="mt-2">
             <b-col>
               <label for="school">Escola</label>
-              <b-form-input id="school" type="text" size="sm" placeholder="nome da escola"></b-form-input>
+              <b-form-input id="school" type="text" size="sm" v-model="new_user.school" @input="clearError('school', error_new_user)" :state="error_new_user.school" placeholder="Ex: E.E.B Escola Exemplo"></b-form-input>
             </b-col>
             <b-col>
               <label for="classroom">Turma</label>
-              <b-form-input id="classroom" type="text" size="sm" placeholder="Ex: 6º 02"></b-form-input>
+              <b-form-input id="classroom" type="text" size="sm" v-model="new_user.classroom" @input="clearError('classroom', error_new_user)" :state="error_new_user.classroom" placeholder="Ex: 6º 02"></b-form-input>
             </b-col>
             <b-col>
               <label for="city">Cidade</label>
-              <b-form-input id="city" type="text" size="sm" placeholder="Ex: São Paulo"></b-form-input>
+              <b-form-input id="city" type="text" size="sm" v-model="new_user.city" @input="clearError('city', error_new_user)" :state="error_new_user.city" placeholder="Ex: São Paulo"></b-form-input>
             </b-col>
           </b-row>
-
           <b-row class="mt-2">
             <b-col>
-              <!-- <b-form-group label="O usuário é um administrador?" v-model="level">
-                <b-form-radio value="yes" v-model="new_user.admin">Sim</b-form-radio>
-                <b-form-radio value="no" v-model="new_user.admin">Não</b-form-radio>
-              </b-form-group> -->
+              <label for="status">O usuário é um administrador?</label>
+              <b-form-checkbox
+                id="status"
+                v-model="new_user.status"
+                switch
+                name="status"
+                value="Sim"
+                unchecked-value="Não"
+              >
+                {{status}}
+              </b-form-checkbox>
             </b-col>
             <b-col>
               <b-form inline>
-                <label class="mr-sm-2" for="inline-form-custom-select-pref">Preference</label>
+                <label class="mr-sm-2" for="group">Grupo</label>
                 <b-form-select
-                  id="inline-form-custom-select-pref"
-                  class="mb-2 mr-sm-2 mb-sm-0"
-                  :options="[{ text: 'Choose...', value: null }, 'One', 'Two', 'Three']"
-                  :value="null"
+                  id="group"
+                  class="mt-2"
+                  :options="groups"
+                  :value="groups.value"
+                  v-model="new_user.group" 
+                  @input="clearError('group', error_new_user)" 
+                  :state="error_new_user.group"
                 ></b-form-select>
               </b-form>
             </b-col>
+            <b-col>
+            </b-col>
           </b-row>
+        </b-modal>
+      </div>
+      <div>
+        <b-modal ok-title="Confirmar"
+        cancel-title="Cancelar"
+        id="modal-remove-user"
+        @ok.prevent="saveRemoveUser()"
+        @close="cancelRemove()"
+        title="Excluir usuário"
+        button-size="sm">
+        <p>Você tem certeza que deseja remover <b>{{remove_user.name}}</b> do sistema?</p>
+        <p>Essa acão resultará na exclusão de todos os dados desse usuário e removerá o acesso do mesmo.</p>
         </b-modal>
       </div>
   </div>
@@ -113,21 +140,46 @@
         {name: "Editar"            },
         {name: "Excluir"           }
       ],
+      new_user: {
+        fullname: null,
+        email: null,
+        birth: null,
+        phone: null,
+        school: null,
+        classroom: null,
+        city: null,
+        status: null,
+        group: null
+      },
+      error_new_user: {
+        fullname: null,
+        email: null,
+        birth: null,
+        phone: null,
+        school: null,
+        classroom: null,
+        city: null,
+        status: null,
+        group: null
+      },
+      remove_user: {
+        id: null,
+        name: null
+      },
       items: [],
       selected: null,
-      options: [
-        {value: null, text: '-- Selecione --', disabled: true },
-        {text: 'Sim' },
-        {text: 'Não' }
-      ]
+      status: "Não",
+      groups: [{value: null, text: '-- Selecione --', disabled: true }]
     }),
 
-    mounted() { this.getUsers() },
+    mounted() { 
+      this.getUsers()
+    },
 
     methods: {
-
       getUsers: function() {
-        this.$axios({
+        const service = this
+        service.$axios({
           method: "GET",
           url: "http://localhost:8000/users",
         }).then((response) => {
@@ -152,19 +204,176 @@
             if (!user.group) user.group = group
             if (!user.school) user.school = school
             if (!user.classroom) user.classroom = classroom
-            user.birth = this.formatDate(user.birth)
+            user.birth = service.$moment().format('DD/MM/Y') //TODO ajustar com dia data certa
 
-            this.items.push(user)
+            service.items.push(user)
           }
         }).catch((error) => {
           console.error(error);
-          // this._toast("Erro ao requisitar informações do servidor", "error")
+          service._toast("Erro ao requisitar informações do servidor", "error")
         })  
       },
 
-      formatDate: function(date) {
-        let newDate = new Date(date)      
-        return newDate.getDate() + '/' + (newDate.getMonth() + 1) + '/' + newDate.getFullYear();
+      clearError: function(prop, error) {
+        error[prop] = null
+      },
+
+      saveNewUser: function() {
+        if (!this.validInputs(this.new_user, this.error_new_user))
+          return false
+
+        let userModal = this.new_user
+
+        let newUser = {
+          name: userModal.fullname,
+          email: userModal.email,
+          phone: userModal.phone,
+          flagMaster: userModal.status ? 1 : 0,
+          birth: this.$moment(userModal.birth).format('DD/MM/Y'),
+          group: {
+            id: userModal.group
+          },
+          address: {
+            city: userModal.city,
+            uf: {
+              uf: null,
+              name: null
+            }
+          }
+        }
+        this.$axios({
+          method: "POST",
+          url: "http://localhost:8000/users/create",
+          headers: {
+            "content-type": "application/json",
+            "Accept": "application/json"
+          },
+          data: newUser
+        }).then((response) => {
+          if (response.status == 200){
+            this._toast("Salvo com sucesso!", "success")
+            this.$root.$emit('bv::hide::modal', 'modal-new-group')
+          }
+        }).catch((error) => {
+          this._toast("Não foi possível salvar, tente novamente mais tarde.", "error")
+          console.error(error);
+        })
+      },
+
+      _toast: function(_message, _type){
+        this.$toast.open({
+          message: _message,
+          type: _type,
+          position: "top-right",
+        })
+      },
+
+      regexTypes: function() {
+        return [null, undefined, ""]
+      },
+
+      validInputs: function(data, error){
+        var list_fields = []
+        var valid = true
+           
+        for(const prop in data) {
+          if (this.regexTypes().includes(data[prop])){
+            valid = false
+            error[prop] = false
+            list_fields.push(prop)
+          }
+        }
+        var message = (list_fields.length > 1) ? "Os campos " : "O campo"
+        list_fields.forEach(element => {
+            if (element == "fullname")
+              message += "<b> nome completo </b>,"
+            else if(element == "email")
+              message += "<b> email </b>,"
+            else if(element == "birth")
+              message += "<b> data de nascimento </b>,"
+            else if(element == "phone")
+              message += "<b> telefone </b>,"
+            else if(element == "school")
+              message += "<b> escola </b>,"
+            else if(element == "classroom")
+              message += "<b> turma </b>,"
+            else if(element == "city")
+              message += "<b> cidade </b>,"
+            else if(element == "status")
+              message += "<b> status </b>,"
+            else
+              message += "<b> grupo </b>,"
+        })
+
+        message = message.substring(0, message.length - 1)
+
+        if(list_fields.length > 1) {
+          var index = message.lastIndexOf(",");
+          message = message.substring(0, index) + "e" + message.substring(index + 1);
+        }
+        message += (list_fields.length > 1) ? " são obrigatórios. " : "é obrigatório."
+
+        if(!valid)
+          this._toast(message, "error")
+
+        return valid
+      },
+
+      saveRemoveUser: function() {
+        this.$axios({
+          method: 'DELETE',
+          url:'http://localhost:8000/users/delete/' + this.remove_user.id
+        }).then((response) => {
+          if (response.status == 200)
+            this._toast('Usuário removido com sucesso', 'success')
+        }).catch((error) => {
+          this._toast('Não foi possível excluir esse usuário, tente novamente mais tarde.', 'error')
+          console.error(error);
+        }).finally(() => {
+          this.$root.$emit('bv::hide::modal', 'modal-remove-user')
+        })
+      },
+
+      showModalRemove: function(user) {
+        this.remove_user.id = user.id,
+        this.remove_user.name = user.name
+        this.$root.$emit('bv::show::modal', 'modal-remove-user')
+      },
+
+      cancelRemove: function() {
+        this.remove_user = {
+          id: null,
+          name: null
+        }
+      },
+
+      getGroupsForRegistry: function() {
+        this.$axios({
+        method: "GET",
+        url: "http://localhost:8000/groups",
+      }).then((response) => {
+        if (this.groups.length == 1) {
+          let groups = response.data
+            for (let index in groups) {
+              let group = groups[index]
+              let item = {
+                value: group.id,
+                text: group.name,
+                disabled: false
+              }
+              this.groups.push(item)
+        }
+        }
+        
+      }).catch((error) => {
+        console.error(error)
+        this._toast("Erro ao requisitar informações do servidor", "error")
+      })
+      },
+
+      showModalCreate: function() {
+        this.$root.$emit('bv::show::modal', 'modal-new-users')
+        this.getGroupsForRegistry()
       }
 
     }

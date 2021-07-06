@@ -271,61 +271,47 @@ export default {
   methods: {
 
     getGroups: function() {
-      const service = this
-      service.$axios({
+      this.$axios({
         method: "GET",
         url: "http://localhost:8000/groups",
       }).then((response) => {
-        service.prepare(response.data)
+        this.prepare(response.data)
       }).catch((error) => {
         console.error(error)
-        service._toast("Erro ao requisitar informações do servidor", "error")
+        this._toast("Erro ao requisitar informações do servidor", "error")
       })
     },
 
     prepare: function(groups = []) {
-      for(let index in groups) {
+      for (let index in groups) {
         let group = groups[index]
         let item = {
-          id: undefined,
-          name: undefined,
-          description: undefined,
+          id: group.id,
+          name: group.name,
+          description: group.description,
           permissions: {
             modules: {
-              challenges: false,
-              ranking: false,
-              reports: false,
-              configuration: false
+              challenges: group.permission.viewChallenges,
+              ranking: group.permission.viewRanking,
+              reports: group.permission.viewReports,
+              configuration: group.permission.viewConfig
             },
             actions: {
-              conf_challenges: false,
-              play_challenges: false,
-              conf_users: false,
-              view_users: false,
-              conf_groups: false,
-              view_groups: false
+              conf_challenges: group.action.confChallenges,
+              play_challenges: group.action.playChallenges,
+              conf_users: group.action.confUsers,
+              view_users: group.action.viewUsers,
+              conf_groups: group.action.confGroups,
+              view_groups: group.action.viewGroups
             }
           }
         }
-        item.id = group.id
-        item.name = group.name
-        item.description = group.description
-        item.permissions.modules.challenges = group.permission.viewChallenges
-        item.permissions.modules.ranking = group.permission.viewRanking
-        item.permissions.modules.reports = group.permission.viewReports
-        item.permissions.modules.configuration = group.permission.viewConfig
-        item.permissions.actions.conf_challenges = group.action.confChallenges
-        item.permissions.actions.play_challenges = group.action.playChallenges
-        item.permissions.actions.conf_users = group.action.confUsers
-        item.permissions.actions.view_users = group.action.viewUsers
-        item.permissions.actions.conf_groups = group.action.confGroups
-        item.permissions.actions.view_groups = group.action.viewGroups
 
         this.items.push(item)
       }
     },
 
-    showModalEdit:function (item){
+    showModalEdit: function(item) {
       this.edit_group.name = item.name;
       this.edit_group.id = item.id;
       this.edit_group.description = item.description;
@@ -333,13 +319,13 @@ export default {
       this.$root.$emit('bv::show::modal', 'modal-edit-group')
     },
 
-    showModalRemove:function (item){
+    showModalRemove: function(item) {
       this.remove_group.name = item.name;
       this.remove_group.id = item.id;
       this.$root.$emit('bv::show::modal', 'modal-remove-group')
     },
 
-    showModalCreate: function (){
+    showModalCreate: function () {
       this.$root.$emit('bv::show::modal', 'modal-new-group')
     },
 
@@ -373,14 +359,14 @@ export default {
       }
     },
 
-    cancelRemove:function(){
+    cancelRemove:function() {
       this.remove_group = {
         id: null,
         name: null
       }
     },
 
-    cancelNew: function(){
+    cancelNew: function() {
       this.new_group  = {
         name: null,
         description: null,
@@ -461,39 +447,85 @@ export default {
       error[prop] = null
     },
 
-    saveNewGroup: function (){
-      if (!this.validInputs(this.new_group, this.error_new_group))
+    saveNewGroup: () => {
+      const service = this
+      const groupToSave = service.new_group
+
+      if (!service.validInputs(groupToSave, service.error_new_group))
         return false
 
-      var json = this.new_group;
+      const view = groupToSave.permissions.modules
+      const actions = groupToSave.permissions.actions
 
-      this.$axios({
+      let newGroup = {
+        name: groupToSave.name,
+        description: groupToSave.description,
+        permission: {
+          viewChallenges: view.challenges,
+          viewRanking: view.ranking,
+          viewReports: view.reports,
+          viewConfig: view.configuration
+        },
+        action: {
+          confChallenges: actions.conf_challenges,
+          playChallenges: actions.play_challenges,
+          confUsers: actions.conf_users,
+          viewUsers: actions.view_users,
+          confGroups: actions.conf_groups,
+          viewGroups: actions.view_groups
+        }
+      }
+
+      service.$axios({
         method: "POST",
-        url: "http://localhost:8000/group/create",
-        data: json
+        url: "http://localhost:8000/groups/create",
+        data: newGroup
       }).then((response) => {
         if (response.status == 200){
-          this._toast("Salvo com sucesso!", "success")
-          this.$root.$emit('bv::hide::modal', 'modal-new-group')
+          service._toast("Salvo com sucesso!", "success")
+          service.$root.$emit('bv::hide::modal', 'modal-new-group')
         }
       }).catch((error) => {
 
-        this._toast("Não foi possível salvar, tente novamente mais tarde.", "error")
+        service._toast("Não foi possível salvar, tente novamente mais tarde.", "error")
         console.error(error);
       })
 
     },
 
-    saveEditGroup: function(){
+    saveEditGroup: () => {
+      const service = this
+      const groupToEdit = service.edit_group
       if (!this.validInputs(this.edit_group, this.error_edit_group))
         return false
 
-      let json = this.edit_group;
+      const view = groupToEdit.permissions.modules
+      const actions = groupToEdit.permissions.actions
+
+      let updated = {
+        id: groupToEdit.id,
+        name: groupToEdit.name,
+        description: groupToEdit.description,
+        permission: {
+          viewChallenges: view.challenges,
+          viewRanking: view.ranking,
+          viewReports: view.reports,
+          viewConfig: view.configuration
+        },
+        action: {
+          confChallenges: actions.conf_challenges,
+          playChallenges: actions.play_challenges,
+          confUsers: actions.conf_users,
+          viewUsers: actions.view_users,
+          confGroups: actions.conf_groups,
+          viewGroups: actions.view_groups
+        }
+      }
 
       this.$axios({
         method: "POST",
-        url: "http://localhost:8000/group/edit",
-        data: json
+        url: "http://localhost:8000/groups/update",
+        data: updated
       }).then((response) => {
         if (response.status == 200){
           this._toast("Salvo com sucesso!", "success")
@@ -505,7 +537,7 @@ export default {
       })
     },
 
-    saveRemoveGroup: function(){
+    saveRemoveGroup: function() {
       this.$axios({
         method: "DELETE",
         url: "http://localhost:8000/groups/delete/" + this.remove_group.id

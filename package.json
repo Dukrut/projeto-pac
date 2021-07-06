@@ -14,8 +14,10 @@
     "bootstrap-vue": "^2.21.2",
     "core-js": "^3.6.5",
     "jquery": "^3.6.0",
+    "moment": "^2.29.1",
     "vue": "^2.6.12",
     "vue-axios-cors": "^1.0.1",
+    "vue-moment": "^4.1.0",
     "vue-router": "^3.5.1",
     "vue-toast-notification": "^0.6.1"
   },

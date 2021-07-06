@@ -77,7 +77,7 @@
             <div>
               <p v-for="ans,index in answer"  :key="index" class="mt-3 ml-2"> <b>{{labelAlternative(index)}}</b>. {{answer[index]}}</p>
               <div class="d-flex justify-content-center align-middle h-50">
-                <b-button class="buttons btn" @click="submitReply()">Enviar respostas</b-button>
+                <b-button class="buttons btn" @click="submitReply()">Enviar respostas <b-icon icon="check-circle"></b-icon> </b-button>
               </div>
             </div>
           </div>
@@ -122,10 +122,13 @@ export default {
 
     getChallenges: function() {
       const service = this
+
+      let user = JSON.parse(sessionStorage.getItem('user'))
+
       service.time = "10:00"
       service.$axios({
         method: "GET",
-        url: "http://localhost:8000/questions/level/" + parseInt(service.level),
+        url: "http://localhost:8000/questions/" + user.id + "/" + parseInt(service.level),
       }).then((response) => {
         let questions = response.data 
         if (!questions.length) {
