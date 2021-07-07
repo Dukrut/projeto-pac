@@ -132,8 +132,7 @@ export default {
 
       let json = {
         login: service.form.email,
-        password: service.form.password,
-        token: ""
+        password: service.form.password
       }
       service.$axios({
         method: "POST",

@@ -32,7 +32,7 @@
     <b-modal ok-title="Confirmação"
              cancel-title="Cancelar"
              id="modal-remove-question"
-             @ok.prevent="removeQuestion()"
+             @ok.prevent="removeQuestion(item)"
              @close="cancelRemove()"
              title="Excluir questão"
              button-size="sm">
@@ -226,6 +226,8 @@ export default {
       }).then((response) => {
         if (response.status == 200) {
           service._toast("Excluído com sucesso!", "success")
+          service.items = [];
+          service.getQuestions()
         }
       }).catch((error) => {
         service._toast("Não foi possível excluir essa questão, tente novamente mais tarde.", "error")
@@ -250,6 +252,10 @@ export default {
       service.edit_question.correctResponse = item.correctResponse
       service.edit_question.alternatives = item.alternatives
       this.$root.$emit('bv::show::modal', 'modal-edit-question')
+    },
+
+    editQuestion: function(item = {}) {
+      console.log(item)
     },
 
     cancelEdit: function() {
