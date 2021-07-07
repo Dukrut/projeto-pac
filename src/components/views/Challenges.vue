@@ -28,24 +28,29 @@
 
     <div v-else class="w-100">
       <div class="row">
-        <div class="col-8">
-          <div class="p-1">
-            <span>{{ labelAlternative(key) }}. <strong>Descrição da questão</strong></span><br>
-            <p class="ml-4"> {{ challenges[key].description }} </p>
+        <div class="col-8 justift-content-center align-middle">
+          <div class="bg-white rounded border w-50 h-50 p-4"  style="margin-left:25%">
+            <div class="p-1">
+              <div class="h-100">
+                <div class="ml-2 overflow-auto text-justify">
+                  <span><strong>{{ key+1 }}.</strong></span> {{ challenges[key].description }} </div>
+              </div>
+              <hr>
+              <div>
+                <span><strong>Selecione a alternativa correta</strong>:</span>
+                <b-form-radio-group
+                      v-model="answer[key]"
+                      :options="challenges[key].options"
+                      :name="answer[key]"
+                      stacked
+                ></b-form-radio-group>
+              </div>
+            </div>
           </div>
-          
-          <div class="p-1">
-            <span><strong>Selecione a alternativa correta</strong>:</span>
-            <b-form-radio-group
-                  v-model="answer[key]"
-                  :options="challenges[key].options"
-                  :name="answer[key]"
-            ></b-form-radio-group>
-          </div>
-          <hr>  
+          <hr class="mt-4">  
         <div class="d-flex justify-content-center align-middle h-50">
           <b-button class="buttons mt-4 btn" @click="backQuestion()" style="height:38px" :disabled="key == 0"><b-icon icon="arrow-left-square"></b-icon> Voltar pergunta</b-button>
-          <b-button v-if="key != 4" class="buttons btn mx-2 mt-4" style="height:38px" @click="nextQuestion()" :disabled="regexTypes().includes(answer[key])">Próxima pergunta <b-icon icon="arrow-right-square"></b-icon></b-button>
+          <b-button v-if="key != 4" class="buttons btn mx-2 mt-4" style="height:38px" @click="nextQuestion()" :disabled="regexTypes().includes(answer[key]) || key == challenges.length - 1">Próxima pergunta <b-icon icon="arrow-right-square"></b-icon></b-button>
           <b-button v-else class="buttons mx-2 mt-4 btn" style="height:38px" @click="nextQuestion()">Enviar respostas <b-icon icon="check-circle"></b-icon></b-button>
         </div>
         </div>
@@ -53,7 +58,7 @@
           <div v-if="regexTypes().includes(answer[4])" class="d-flex justify-content-center align-middle w-100 timer">
             <h1><b-icon icon="stopwatch"></b-icon> Tempo restante:<span class="ml-4" :style="'color:'+color">{{ time }}</span></h1>
           </div>
-          <hr>
+          <hr class="mt-1">
           <div class="ml-3 p-2">
             <h3 class="text-center mt-3">Perguntas respondidas</h3>
             <div v-for="ans,index in answer"  :key="index" class="row mt-3">
@@ -74,7 +79,7 @@
           <h3 class="text-center mt-3">Gabarito</h3>
           <div class="w-100">
             <span class="text-center" v-if="regexTypes().includes(answer[4])"> <i class="text-center">É necessário responder os 5 desafios antes de ver o gabarito.</i></span>
-            <div>
+            <div v-else>
               <p v-for="ans,index in answer"  :key="index" class="mt-3 ml-2"> <b>{{labelAlternative(index)}}</b>. {{answer[index]}}</p>
               <div class="d-flex justify-content-center align-middle h-50">
                 <b-button class="buttons btn" @click="submitReply()">Enviar respostas <b-icon icon="check-circle"></b-icon> </b-button>
@@ -190,8 +195,10 @@ export default {
 
     nextQuestion: function(){
       setTimeout(() => {  
-        if(this.key == 4)
+        if(this.key == 4 || this.key == this.challenges.length - 1){
+          this._toast("Você já chegou a última pergunta do desafio.", "error")
           return false
+        }
         if (this.regexTypes().includes(this.answer[this.key])) {
           this._toast("Selecione uma resposta antes de ir para a próxima pergunta", "error")
           return false;
