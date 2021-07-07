@@ -226,6 +226,7 @@ export default {
       }).then((response) => {
         if (response.status == 200) {
           service._toast("Excluído com sucesso!", "success")
+          service.items = [];
           service.getQuestions()
         }
       }).catch((error) => {
