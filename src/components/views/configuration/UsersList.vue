@@ -226,9 +226,13 @@
 
         let newUser = {
           name: userModal.fullname,
+          username: 'default',
+          password: 'default',
           email: userModal.email,
           phone: userModal.phone,
           flagMaster: userModal.status ? 1 : 0,
+          points: 0,
+          extraTime: 0,
           birth: this.$moment(userModal.birth).format('DD/MM/Y'),
           group: {
             id: userModal.group
@@ -236,19 +240,15 @@
           address: {
             city: userModal.city,
             uf: {
-              uf: null,
-              name: null
+              uf: 'XX',
+              name: 'XXX'
             }
           }
         }
         this.$axios({
           method: "POST",
           url: "http://localhost:8000/users/create",
-          headers: {
-            "content-type": "application/json",
-            "Accept": "application/json"
-          },
-          data: newUser
+          data: JSON.stringify(newUser)
         }).then((response) => {
           if (response.status == 200){
             this._toast("Salvo com sucesso!", "success")
@@ -299,8 +299,6 @@
               message += "<b> turma </b>,"
             else if(element == "city")
               message += "<b> cidade </b>,"
-            else if(element == "status")
-              message += "<b> status </b>,"
             else
               message += "<b> grupo </b>,"
         })
