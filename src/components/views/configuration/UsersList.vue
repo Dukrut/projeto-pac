@@ -462,7 +462,7 @@
         this.$root.$emit('bv::show::modal', 'modal-remove-user')
       },
 
-      saveEditUser: () => {
+      saveEditUser() {
         const service = this
         const userToEdit = service.edit_users
         if (!this.validInputs(this.edit_users, this.error_edit_users))

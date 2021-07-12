@@ -5,9 +5,9 @@
 
     <div class="container">
         <div id="podium">
-            <div class="podiumPosition" id="secondPlace"><b>{{podium[1].id}}</b></div>
-            <div class="podiumPosition" id="firstPlace"><b>{{podium[0].id}}</b></div>
-            <div class="podiumPosition" id="thirdPlace"><b>{{podium[2].id}}</b></div>
+            <div class="podiumPosition" id="secondPlace"><b><b-icon icon="award-fill"/> {{podium[1].position}}</b></div>
+            <div class="podiumPosition" id="firstPlace"><b><b-icon icon="trophy-fill"/> {{podium[0].position}}</b></div>
+            <div class="podiumPosition" id="thirdPlace"><b><b-icon icon="award-fill"/> {{podium[2].position}}</b></div>
         </div>
         <div id="labels">
             <div class="podiumName" id="secondName">{{podium[1].name}}</div>
@@ -38,7 +38,7 @@
     font-family: Arial, Helvetica, sans-serif;
   }
   .container {
-    width: 70%;
+    width: 75%;
     height: 40%;
     margin: auto;
   }
@@ -187,21 +187,21 @@ export default {
     ],
     podium: [
       {
-        position: "1º Lugar",
+        position: "1º",
         name: 'Braian Costa Zapelini',
-        description: "100",
+        score: "100",
         id: 1
       },
       {
-        position: "2º Lugar",
+        position: "2º",
         name: 'Gabriel da Costa',
-        description: "90",
+        score: "90",
         id: 2
       },
       {
-        position: "3º Lugar",
+        position: "3º",
         name: 'Leonardo Cech',
-        description: "80",
+        score: "80",
         id: 3
       }
     ],

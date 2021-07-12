@@ -174,20 +174,20 @@
       <br>
       <label class="mt-4" for=""><i>Configurações</i></label>
       <br>
-      <div class="form-check form-check-inline mt-1 col-5 ml-2">
+      <div class="form-check form-check-inline mt-1 ml-2">
         <input class="form-check-input" type="checkbox" id="conf_users" v-model="new_group.permissions.actions.conf_users">
         <label class="form-check-label" for="conf_users">Cadastrar, editar e excluir usuários</label>
       </div>
-      <div class="form-check form-check-inline col">
+      <div class="form-check form-check-inline ">
         <input class="form-check-input" type="checkbox" id="view_users" v-model="new_group.permissions.actions.view_users">
         <label class="form-check-label" for="view_users">Visualizar usuários</label>
       </div>
       <br>
-      <div class="form-check form-check-inline col-5 ml-2">
+      <div class="form-check form-check-inline ml-2">
         <input class="form-check-input" type="checkbox" id="conf_groups" v-model="new_group.permissions.actions.conf_groups">
         <label class="form-check-label" for="conf_groups">Cadastrar, editar e excluir grupos</label>
       </div>
-      <div class="form-check form-check-inline col">
+      <div class="form-check form-check-inline">
         <input class="form-check-input" type="checkbox" id="view_groups" v-model="new_group.permissions.actions.view_groups">
         <label class="form-check-label" for="view_groups">Visualizar grupos</label>
       </div>
@@ -447,7 +447,8 @@ export default {
       error[prop] = null
     },
 
-    saveNewGroup: () => {
+    saveNewGroup() {
+      console.log(this.new_group);
       const service = this
       const groupToSave = service.new_group
 
@@ -493,7 +494,7 @@ export default {
 
     },
 
-    saveEditGroup: () => {
+    saveEditGroup() {
       const service = this
       const groupToEdit = service.edit_group
       if (!this.validInputs(this.edit_group, this.error_edit_group))

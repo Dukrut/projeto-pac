@@ -12,9 +12,9 @@
         <tbody class="border">
           <tr class="border text-center" :class="{'item-table-striped':index % 2 == 0, 'item-table': index % 2 != 0}" v-for="item, index in items" :key="index">
             <td class="p-2 border text-justify"> {{item.title}} </td>
-            <td class="p-2 border text-justify"> {{item.description}} </td>
-            <td class="p-2 border text-justify"> {{item.level}} </td>
-            <td class="p-2 border text-justify"> {{item.correctResponse}} </td>
+            <td class="p-2 border text-justify "> {{item.description}} </td>
+            <td class="p-2 border text-center"> {{item.level}} </td>
+            <td class="p-2 border text-center"> {{item.correctResponse}} </td>
             <td class="p-2 border text-center">
               <button class="btn-warning rounded" @click="showModalDetail(item)"><b-icon icon="arrow-up-right"></b-icon></button>
             </td>
@@ -29,7 +29,7 @@
       </table>
       
     <!-- Modal de Excluir -->
-    <b-modal ok-title="Confirmação"
+    <b-modal ok-title="Confirmar"
              cancel-title="Cancelar"
              id="modal-remove-question"
              @ok.prevent="removeQuestion(item)"
@@ -54,11 +54,11 @@
     <div class="p-4">
       <b-row>
         <b-col>
-          <label>Título:</label>
+          <label>Questão:</label>
           <b-form-input v-model="edit_question.title" id="title" type="text" size="sm" placeholder="Ex: Question 1"></b-form-input>
         </b-col>
         <b-col>
-          <label>Dificuldade:</label>
+          <label>Nível:</label>
           <b-form-select 
             v-model="edit_question.level" 
             :options="levelOpt"
@@ -91,7 +91,7 @@
       <b-row class="mt-2">
         <b></b>
         <b-col>
-          <b>Alternativa correta</b>
+          <b>Resposta</b>
           <b-form-group>
             <b-form-radio-group
               class="pt-2"
@@ -135,13 +135,13 @@ export default {
   components: {},
   data: () => ({
     fields: [
-      {name: "Título"              },
-      {name: "Descrição"           },
-      {name: "Dificuldade"         },
-      {name: "Alternativa correta" },
-      {name: "Detalhar"            },
-      {name: "Editar"              },
-      {name: "Excluir"             }
+      {name: "Questão" },
+      {name: "Descrição"},
+      {name: "Nível"},
+      {name: "Resposta"},
+      {name: "Informações"},
+      {name: "Editar"},
+      {name: "Excluir"}
     ],
     items: [],
     remove_question: {
