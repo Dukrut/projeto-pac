@@ -117,7 +117,7 @@
              button-size="sm"
              title="Excluir usuário">
       <p>
-        Você tem certeza que deseja remover o usuário <b>{{remove_users.name}}</b>?
+        Você tem certeza que deseja remover o usuário <b>{{remove_user.name}}</b>?
       </p>
     </b-modal>
 
@@ -249,7 +249,6 @@
         group:     null
       },
       new_user: {
-        id:        null,
         name:      null,
         email:     null,
         birth:     null,
@@ -261,6 +260,18 @@
         group:     null
       },
       error_new_users: {
+        id:        null,
+        name:      null,
+        email:     null,
+        birth:     null,
+        phone:     null,
+        school:    null,
+        classroom: null,
+        city:      null,
+        status:    null,
+        group:     null
+      },
+      error_edit_users: {
         id:        null,
         name:      null,
         email:     null,
@@ -329,31 +340,18 @@
         if (!this.validInputs(this.new_user, this.error_new_users))
           return false
 
-        let userModal = this.new_user
-
-        let newUser = {
-          name:  userModal.name,
-          email: userModal.email,
-          phone: userModal.phone,
-          flagMaster: userModal.status ? 1 : 0,
-          points: 0,
-          extraTime: 0,
-          birth: this.$moment(userModal.birth).format('DD/MM/Y'),
-          group: {
-            id: userModal.group
-          },
-          address: {
-            city: userModal.city,
-            uf: {
-              uf: 'XX',
-              name: 'XXX'
-            }
-          }
-        }
+        let userModal = this.new_user;
+        delete userModal.school;
+        delete userModal.classroom;
+        delete userModal.address;
+        userModal.birth = this.$moment(userModal.birth).format('DD/MM/Y');
+        userModal.flagMaster = userModal.status ? 1 : 0;
+        userModal.points = 0;
+        userModal.extraTime = 0;
         this.$axios({
           method: "POST",
           url: "http://localhost:8000/users/create",
-          data: JSON.stringify(newUser)
+          data: userModal
         }).then((response) => {
           if (response.status == 200){
             this._toast("Salvo com sucesso!", "success")
@@ -377,11 +375,11 @@
         return [null, undefined, ""]
       },
 
-      validInputs: function(data, error){
+      validInputs: function(data, error) {
         var list_fields = []
         var valid = true
            
-        for(const prop in data) {
+        for (const prop in data) {
           if (this.regexTypes().includes(data[prop])){
             valid = false
             error[prop] = false
@@ -462,7 +460,7 @@
         this.$root.$emit('bv::show::modal', 'modal-remove-user')
       },
 
-      saveEditUser() {
+      saveEditUser: function() {
         const service = this
         const userToEdit = service.edit_users
         if (!this.validInputs(this.edit_users, this.error_edit_users))
@@ -505,19 +503,6 @@
 
       cancelEdit: function() {
         this.edit_users = {
-          id:        null,
-          name:      null,
-          email:     null,
-          birth:     null,
-          phone:     null,
-          school:    null,
-          classroom: null,
-          city:      null,
-          status:    null,
-          group:     null
-        }
-
-        this.error_edit_users = {
           id:        null,
           name:      null,
           email:     null,

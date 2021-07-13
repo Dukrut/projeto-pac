@@ -32,6 +32,65 @@
   </div>
 </template>
 
+<script>
+
+export default {
+  components:{
+  },
+  data: () => ({
+    fields: [
+      {name: "Posição"},
+      {name: "Nome" },
+      {name: "Pontuação"}
+    ],
+    podium: [],
+    items: []
+  }),
+
+  mounted() { this.getRanking() },
+
+  methods: {
+
+    regexTypes: function() {
+      return [null, undefined, ""]
+    },
+
+    getRanking: function() {
+      const service = this
+      service.$axios({
+        method: "GET",
+        url: "http://localhost:8000/users/ranking"
+      }).then((response) => {
+        let ranking = response.data;
+        let count = 0;
+        for (let index in ranking) {
+          let pos = ranking[index];
+          if (count < 3) {
+            service.buildPodium(pos);
+            count++;
+          } else {
+            service.items.push(pos);
+          }
+        }
+      }).catch((error) => {
+        console.error(error)
+        service._toast("Erro ao requisitar informações do servidor", "error")
+      })
+    },
+
+    buildPodium: function(data) {
+      let podiumLevel = {
+        id: data.position,
+        name: data.student
+      }
+      this.podium.push(podiumLevel)
+    }
+
+  }
+}
+
+</script>
+
 <style>
 
   * {
@@ -173,121 +232,3 @@
   }
 
 </style>
-
-<script>
-
-export default {
-  components:{
-  },
-  data: () => ({
-    fields: [
-      {name: "Posição"},
-      {name: "Nome" },
-      {name: "Pontuação"}
-    ],
-    podium: [
-      {
-        position: "1º",
-        name: 'Braian Costa Zapelini',
-        score: "100",
-        id: 1
-      },
-      {
-        position: "2º",
-        name: 'Gabriel da Costa',
-        score: "90",
-        id: 2
-      },
-      {
-        position: "3º",
-        name: 'Leonardo Cech',
-        score: "80",
-        id: 3
-      }
-    ],
-    items: [],
-    remove_group:{
-      name: null,
-      id: null
-    },
-    edit_group:{
-      name: null,
-      id: null,
-      description: null,
-      permissions: {
-        modules:{
-          challenges: false,
-          ranking: false,
-          reports: false,
-          configuration: false
-        },
-        actions:{
-          conf_chanllenges:false,
-          view_challenges: false,
-          play_challegens: false,
-          conf_users: false,
-          view_users: false,
-          conf_groups: false,
-          view_groups: false
-        }
-      }
-    },
-    new_group:{
-      name: null,
-      description: null,
-      permissions: {
-        modules:{
-          challenges: true,
-          ranking: true,
-          reports: false,
-          configuration: false
-        },
-        actions:{
-          conf_chanllenges:false,
-          view_challenges: true,
-          play_challegens: true,
-          conf_users: false,
-          view_users: false,
-          conf_groups: false,
-          view_groups: false
-        }
-      }
-    },
-    error_new_group:{
-      name: null,
-      description: null,
-    },
-    error_edit_group:{
-      name: null,
-      description: null
-    }
-  }),
-
-  mounted() { this.getRanking() },
-
-  methods: {
-
-    regexTypes: function() {
-      return [null, undefined, ""]
-    },
-
-    getRanking: function() {
-      const service = this
-      service.$axios({
-        method: "GET",
-        url: "http://localhost:8000/users/ranking"
-      }).then((response) => {
-        let ranking = response.data
-        for (let index in ranking) {
-          service.items.push(ranking[index])
-        }
-      }).catch((error) => {
-        console.error(error)
-        service._toast("Erro ao requisitar informações do servidor", "error")
-      })
-    }
-
-  }
-}
-
-</script>

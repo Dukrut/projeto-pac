@@ -545,7 +545,6 @@ export default {
       }).then((response) => {
         if (response.status == 200) {
           this._toast("Excluído com sucesso!", "success")
-          this.refresh()
         }
       }).catch((error) => {
         this._toast("Não foi possível excluir esse grupo, tente novamente mais tarde.", "error")
@@ -553,12 +552,7 @@ export default {
       }).finally(() => {
         this.$root.$emit('bv::hide::modal', 'modal-remove-group')
       })
-    },
-
-    refresh: function() {
-      console.log("Refresh")
     }
-
   }
 }
 </script>
