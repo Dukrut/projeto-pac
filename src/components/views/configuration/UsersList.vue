@@ -318,11 +318,12 @@
               name: undefined
             }
 
-            if (!user.address) user.address = address
-            if (!user.group) user.group = group
-            if (!user.school) user.school = school
-            if (!user.classroom) user.classroom = classroom
-            user.birth = service.$moment().format('DD/MM/Y') //TODO ajustar com dia data certa
+            if (user.address == null || user.address == undefined) user.address = address
+            if (user.group == null || user.group == undefined) user.group = group
+            if (user.school == null || user.school == undefined) user.school = school
+            if (user.classroom == null || user.classroom == undefined) user.classroom = classroom
+            let dateSplit = user.birth.split('/')
+            user.birth = service.$moment(new Date(dateSplit[2], dateSplit[1] - 1, dateSplit[0])).format('DD/MM/Y')
 
             service.items.push(user)
           }
