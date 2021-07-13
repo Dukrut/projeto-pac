@@ -448,7 +448,6 @@ export default {
     },
 
     saveNewGroup() {
-      console.log(this.new_group);
       const service = this
       const groupToSave = service.new_group
 
